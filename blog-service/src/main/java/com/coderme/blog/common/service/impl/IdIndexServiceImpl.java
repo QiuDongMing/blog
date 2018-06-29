@@ -19,7 +19,6 @@ public class IdIndexServiceImpl implements IIdIndexService {
 
     @Override
     public String getNextUserId() {
-
         return String.valueOf(indexDao.getDataId(IdIndexDataType.userId.name()));
     }
 }

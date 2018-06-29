@@ -18,8 +18,8 @@ public class RichContentServiceImpl implements IRichContentService {
     private IRichContentDao richContentDao;
 
     @Override
-    public void saveRichContent(RichContent richContent) {
-        richContentDao.saveRichContent(richContent);
+    public String saveRichContent(RichContent richContent) {
+      return richContentDao.saveRichContent(richContent);
     }
 
     @Override

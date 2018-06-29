@@ -9,7 +9,7 @@ import com.coderme.blog.common.data.po.RichContent;
  */
 public interface IRichContentDao {
 
-    void saveRichContent(RichContent richContent);
+    String saveRichContent(RichContent richContent);
 
     RichContent getById(String id);
 

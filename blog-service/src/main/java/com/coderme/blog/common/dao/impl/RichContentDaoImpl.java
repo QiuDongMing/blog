@@ -19,8 +19,9 @@ public class RichContentDaoImpl implements IRichContentDao {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void saveRichContent(RichContent richContent) {
+    public String saveRichContent(RichContent richContent) {
         mongoTemplate.save(richContent);
+        return richContent.getId();
     }
 
     @Override

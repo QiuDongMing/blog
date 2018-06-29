@@ -16,7 +16,8 @@ public class CommonEnums {
 
 
     public enum ContentType {
-        RICH_TEXT(1, "富文本");
+        RICH_TEXT(1, "富文本"),
+        COMMON_TEXT(2, "普通文本");
 
         private int type;
 

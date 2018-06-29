@@ -10,11 +10,10 @@ import com.coderme.blog.common.data.po.RichContent;
 public interface IRichContentService {
 
 
-    void saveRichContent(RichContent richContent);
+    String saveRichContent(RichContent richContent);
 
 
     RichContent getRichContentById(String id);
-
 
 
 
