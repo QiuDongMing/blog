@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 
 /**
  * @author qiudm
@@ -35,7 +37,11 @@ public class WebSocketController {
             user.setBirthday(System.currentTimeMillis());
 
             message = JSON.toJSONString(user);
-            myWebSocket.sendMessage(userId, message);
+            try {
+                myWebSocket.sendMessage(userId, message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

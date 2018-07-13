@@ -11,6 +11,7 @@
         <module>common-base</module>
         <module>blog-api</module>
         <module>blog-service</module>
+        <module>elastic-job</module>
     </modules>
 
     <properties>
