@@ -2,6 +2,7 @@ package com.coderme.blog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author qiudm
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @desc
  */
 @SpringBootApplication
+@ComponentScan("com.coderme.*")
 public class BlogApp {
 
     public static void main(String[] args) {
