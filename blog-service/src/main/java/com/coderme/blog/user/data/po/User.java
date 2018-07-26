@@ -16,6 +16,8 @@ public class User {
 
     private String nickName;
 
+    private String headPic;
+
     private String password;
 
     private Long birthday;

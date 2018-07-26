@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @date 2018/7/20 11:42
  * @desc
  */
-public class BaseUserInfo implements Serializable {
+public class UserInfo implements Serializable {
 
     private String userId;
 

@@ -1,6 +1,6 @@
 package com.coderme.blog.user.service;
 
-import com.coderme.blog.user.cache.data.dto.BaseUserInfo;
+import com.coderme.blog.user.cache.data.dto.UserInfo;
 
 /**
  * @author qiudm
@@ -9,9 +9,9 @@ import com.coderme.blog.user.cache.data.dto.BaseUserInfo;
  */
 public interface IUserService {
 
-    BaseUserInfo getBaseUserInfo(String userId);
+    UserInfo getBaseUserInfo(String userId);
 
-    void setBaseUserInfo(BaseUserInfo baseUserInfo);
+    void setBaseUserInfo(UserInfo userInfo);
 
 
 }

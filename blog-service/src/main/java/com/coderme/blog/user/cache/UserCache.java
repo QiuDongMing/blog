@@ -1,18 +1,17 @@
 package com.coderme.blog.user.cache;
 
 import com.alibaba.fastjson.JSON;
-import com.coderme.blog.user.cache.data.dto.BaseUserInfo;
+import com.coderme.blog.user.cache.data.dto.UserInfo;
 import com.coderme.blog.user.cache.factory.CacheFactory;
 import org.ehcache.Cache;
-import org.springframework.stereotype.Component;
 
 /**
  * @author qiudm
  * @date 2018/7/20 11:41
  * @desc
  */
-@Component
-public class UserCache<T extends BaseUserInfo> {
+
+public class UserCache<T extends UserInfo> {
 
     private Cache cache = null;
 
@@ -33,13 +32,13 @@ public class UserCache<T extends BaseUserInfo> {
     public static void main(String[] args) {
 
         String userId = "1001";
-        BaseUserInfo user = new BaseUserInfo();
+        UserInfo user = new UserInfo();
         user.setUserId(userId);
         user.setUserName("aaa");
 
         UserCache userCache = new UserCache();
         userCache.put(userId, user);
-        BaseUserInfo user1 = userCache.get(userId);
+        UserInfo user1 = userCache.get(userId);
         System.out.println("user1 = " + JSON.toJSONString(user1));
 
 

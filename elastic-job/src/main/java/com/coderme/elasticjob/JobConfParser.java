@@ -50,7 +50,6 @@ public class JobConfParser implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        logger.error("===============");
         environment = ctx.getEnvironment();
         Map<String, Object> beanMap = ctx.getBeansWithAnnotation(ElasticJobConf.class);
         for (Object confBean : beanMap.values()) {
@@ -84,7 +83,8 @@ public class JobConfParser implements ApplicationContextAware {
             int monitorPort = getEnvironmentIntValue(jobName, JobAttributeTag.MONITOR_PORT, conf.monitorPort());
             int maxTimeDiffSeconds = getEnvironmentIntValue(jobName, JobAttributeTag.MAX_TIME_DIFF_SECONDS, conf.maxTimeDiffSeconds());
             int reconcileIntervalMinutes = getEnvironmentIntValue(jobName, JobAttributeTag.RECONCILE_INTERVAL_MINUTES, conf.reconcileIntervalMinutes());
-
+            System.out.println("cron = " + cron);
+            System.out.println("jobExceptionHandler = " + jobExceptionHandler);
             // 核心配置
             JobCoreConfiguration coreConfig =
                     JobCoreConfiguration.newBuilder(jobName, cron, shardingTotalCount)

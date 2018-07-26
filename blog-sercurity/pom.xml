@@ -8,16 +8,28 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>blog-api</artifactId>
+    <artifactId>blog-sercurity</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>com.coderme</groupId>
-            <artifactId>blog-sercurity</artifactId>
+            <artifactId>blog-service</artifactId>
             <version>1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
+
     </dependencies>
+
 
 </project>

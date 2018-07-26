@@ -12,6 +12,7 @@
         <module>blog-api</module>
         <module>blog-service</module>
         <module>elastic-job</module>
+        <module>blog-sercurity</module>
     </modules>
 
     <properties>
