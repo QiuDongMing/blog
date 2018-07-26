@@ -1,7 +1,7 @@
 package service.common;
 
-import com.coderme.blog.common.dao.IRichContentDao;
-import com.coderme.blog.common.data.po.RichContent;
+import com.codermi.blog.common.dao.IRichContentDao;
+import com.codermi.blog.common.data.po.RichContent;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import service.BaseTest;
