@@ -37,5 +37,4 @@ public class Content {
     private List<String> coverUrls;
 
 
-
 }

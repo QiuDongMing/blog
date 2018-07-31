@@ -13,4 +13,8 @@ public interface IUserDao {
 
     User getByNickName(String nickName);
 
+    User getByOpenId(String openId);
+
+    User getByUserId(String userId);
+
 }

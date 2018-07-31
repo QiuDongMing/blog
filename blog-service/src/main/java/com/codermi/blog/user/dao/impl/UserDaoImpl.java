@@ -30,11 +30,15 @@ public class UserDaoImpl implements IUserDao {
         return mongoTemplate.findOne(query, User.class);
     }
 
+    @Override
+    public User getByOpenId(String openId) {
+        Query query = Query.query(Criteria.where("openId").is(openId));
+        return mongoTemplate.findOne(query, User.class);
+    }
 
-
-
-
-
-
-
+    @Override
+    public User getByUserId(String userId) {
+        Query query = Query.query(Criteria.where("userId").is(userId));
+        return mongoTemplate.findOne(query, User.class);
+    }
 }

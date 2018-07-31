@@ -1,7 +1,6 @@
 package service.common;
 
 import com.codermi.blog.common.dao.IRichContentDao;
-import com.codermi.blog.common.data.po.RichContent;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import service.BaseTest;
@@ -18,9 +17,9 @@ public class RichContentTest extends BaseTest {
 
     @Test
     public void insertGetIdTest() {
-        RichContent richContent = new RichContent();
-        richContent.setContent("test");
-        richContentDao.saveRichContent(richContent);
+//        RichContent richContent = new RichContent();
+//        richContent.setContent("test");
+//        richContentDao.saveRichContent(richContent);
     }
 
 

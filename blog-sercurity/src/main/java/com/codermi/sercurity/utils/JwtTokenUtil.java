@@ -1,5 +1,7 @@
 package com.codermi.sercurity.utils;
+
 import com.alibaba.fastjson.JSON;
+import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.data.UserOpenInfo;
 import com.codermi.common.base.utils.StringUtils;
 import com.google.common.collect.Lists;
@@ -31,60 +33,62 @@ public class JwtTokenUtil {
 
     /**
      * 生成token默认 7天
-     * @param userOpenInfo
+     *
+     * @param userInfo
      * @return
      */
-    public static String generateToken(UserOpenInfo userOpenInfo) {
-        return generateToken(userOpenInfo, TimeUnit.DAYS, 7L, null );
+    public static String generateToken(UserInfo userInfo) {
+        return generateToken(userInfo, TimeUnit.DAYS, 7L, null);
     }
 
     /**
      * 生成token默认 7天
-     * @param userOpenInfo
+     *
+     * @param userInfo
      * @return
      */
-    public static String generateToken(UserOpenInfo userOpenInfo, String subject) {
-        return generateToken(userOpenInfo, TimeUnit.DAYS, 7L, subject);
+    public static String generateToken(UserInfo userInfo, String subject) {
+        return generateToken(userInfo, TimeUnit.DAYS, 7L, subject);
     }
 
 
     /**
      * 生成token
-     * @param userOpenInfo
+     *
+     * @param userInfo
      * @return
      */
-    public static String generateToken(UserOpenInfo userOpenInfo, TimeUnit timeUnit, Long duration, String subject) {
+    public static String generateToken(UserInfo userInfo, TimeUnit timeUnit, Long duration, String subject) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256; //指定签名的时候使用的签名算法，也就是header那部分，jjwt已经将这部分内容封装好了。
         Date now = new Date();
         String token = Jwts
-                    .builder()
-                    .setClaims(createClaims(userOpenInfo))
-                    .setId(StringUtils.randomUUID())
-                    .setSubject(subject)
-                    .setIssuedAt(now)
-                    .signWith(signatureAlgorithm, generalKey())
-                    .setExpiration(new Date(now.getTime() + TimeUnit.MILLISECONDS.convert(duration, timeUnit)))
-                    .compact();
+                .builder()
+                .setClaims(createClaims("userInfo", userInfo))
+                .setId(StringUtils.randomUUID())
+                .setSubject(subject)
+                .setIssuedAt(now)
+                .signWith(signatureAlgorithm, generalKey())
+                .setExpiration(new Date(now.getTime() + TimeUnit.MILLISECONDS.convert(duration, timeUnit)))
+                .compact();
         return token;
     }
 
 
-
-
     /**
      * 构建用户基础信息
-     * @param userOpenInfo
+     *
+     * @param obj
      * @return
      */
-    private static Claims createClaims(UserOpenInfo userOpenInfo) {
+    private static Claims createClaims(String key, Object obj) {
         Claims claims = Jwts.claims();
-        claims.put("userInfo", JSON.toJSONString(userOpenInfo));
+        claims.put(key, JSON.toJSONString(obj));
         return claims;
     }
 
-
     /**
      * 解密token
+     *
      * @param token
      * @return
      * @throws Exception
@@ -98,26 +102,28 @@ public class JwtTokenUtil {
     }
 
 
+
     /**
-     * 从token中获取userOpenInfo
+     * 从token中获取userInfo
+     *
      * @param token
      * @return
      */
-    public static UserOpenInfo getUserOpenInfo (String token) {
-        UserOpenInfo userOpenInfo = null;
+    public static UserInfo getUserInfo(String token) {
+        UserInfo userInfo = null;
         try {
             String jsonString = String.valueOf(parseToken(token).get("userInfo"));
-            userOpenInfo = JSON.parseObject(jsonString, UserOpenInfo.class) ;
+            userInfo = JSON.parseObject(jsonString, UserInfo.class);
         } catch (Exception e) {
-            logger.error("failed get userOpenInfo from token, error detail:", e);
+            logger.error("failed get userInfo from token, error detail:", e);
         }
-        return userOpenInfo;
+        return userInfo;
     }
-
 
 
     /**
      * 由字符串生成加密key
+     *
      * @return
      */
     private static SecretKey generalKey() {
@@ -130,21 +136,18 @@ public class JwtTokenUtil {
 
 
     public static void main(String[] args) throws Exception {
-        UserOpenInfo userOpenInfo = new UserOpenInfo();
-        userOpenInfo.setNickName("张三");
-        userOpenInfo.setRoles(Lists.newArrayList("USER","ROLE_USER"));
-        JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
-        String token = jwtTokenUtil.generateToken(userOpenInfo);
-        System.out.println("token = " + token);
-        UserOpenInfo userOpenInfo1 = jwtTokenUtil.getUserOpenInfo(token);
-        System.out.println("userOpenInfo1.getNickName() = " + userOpenInfo1.getNickName());
-        System.out.println("userOpenInfo1.headPic = " + userOpenInfo1.getHeadPic());
-        System.out.println("userOpenInfo1 = " + JSON.toJSONString(userOpenInfo1));
+//        UserOpenInfo userOpenInfo = new UserOpenInfo();
+//        userOpenInfo.setNickName("张三");
+//        userOpenInfo.setRoles(Lists.newArrayList("USER", "ROLE_USER"));
+//        JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+//        String token = jwtTokenUtil.generateToken(userOpenInfo);
+//        System.out.println("token = " + token);
+//        UserOpenInfo userOpenInfo1 = jwtTokenUtil.getUserOpenInfo(token);
+//        System.out.println("userOpenInfo1.getNickName() = " + userOpenInfo1.getNickName());
+//        System.out.println("userOpenInfo1.headPic = " + userOpenInfo1.getHeadPic());
+//        System.out.println("userOpenInfo1 = " + JSON.toJSONString(userOpenInfo1));
 
     }
-
-
-
 
 
 }

@@ -22,6 +22,11 @@ public class User {
 
     private String email;
 
+    /**
+     * 0-女 1-男 default-1
+     */
+    private Byte sex = 1;
+
     private String headPic;
 
     private String password;

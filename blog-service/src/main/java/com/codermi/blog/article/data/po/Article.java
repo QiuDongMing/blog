@@ -24,6 +24,11 @@ public class Article {
     private Content content;
 
     /**
+     * 文章分类Id
+     */
+    private String categoryId;
+
+    /**
      * 标签id
      */
     private List<String> labelIds;

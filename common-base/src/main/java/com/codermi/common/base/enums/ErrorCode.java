@@ -7,13 +7,11 @@ package com.codermi.common.base.enums;
  */
 public enum ErrorCode {
 
-    SUCCESS(0, "成功"),
-    FAILURE(1, "失败"),
+    FAILURE(0, "失败"),
+    SUCCESS(1, "成功"),
+
     ERROR(100100, "服务器繁忙"),
     MISS_PARAM(100101, "缺少必填参数或参数错误");
-
-
-
 
 
 

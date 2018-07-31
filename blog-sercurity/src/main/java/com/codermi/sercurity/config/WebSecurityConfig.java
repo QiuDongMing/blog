@@ -19,6 +19,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITE_LIST = {
+
+            // -- swagger ui
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
 
     /**
      *
@@ -44,17 +53,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                // ...
 //                .formLogin();
 
-
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
+                .antMatchers(AUTH_WHITE_LIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                // We filter the api/** requests
                 .addFilterBefore(new JwtAuthenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
-
     }
+
 
 
 

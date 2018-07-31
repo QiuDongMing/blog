@@ -63,10 +63,6 @@ public class ExceptionHandlerAdvice {
             }
         }
 
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("resultCode", resultCode);
-//        map.put("resultMsg", resultMsg);
-//        map.put("detailMsg", detailMsg);
         JsonResult result = JsonResult.RESULT(resultCode, resultMsg, detailMsg);
 
         String text = JSON.toJSONString(result);

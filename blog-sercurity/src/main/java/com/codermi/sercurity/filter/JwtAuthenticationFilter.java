@@ -1,7 +1,11 @@
 package com.codermi.sercurity.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.codermi.blog.exception.ServiceException;
+import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.data.UserOpenInfo;
+import com.codermi.common.base.enums.ErrorCode;
+import com.codermi.common.base.utils.JsonResult;
 import com.codermi.sercurity.utils.JwtTokenUtil;
 import com.google.common.collect.Lists;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,26 +35,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = getToken(request);
             if (token != null) {
-                UserOpenInfo userOpenInfo = JwtTokenUtil.getUserOpenInfo(token);
-                if (Objects.nonNull(userOpenInfo)) {
+                UserInfo userInfo = JwtTokenUtil.getUserInfo(token);
+                if (Objects.nonNull(userInfo)) {
                     //最关键的部分就是这里, 我们直接注入了Role信息
                     List<SimpleGrantedAuthority> authorities = Lists.newArrayList();
-                    List<String> roles = userOpenInfo.getRoles();
-                    System.out.println("roles = " + JSON.toJSONString(roles));
+                    List<String> roles = userInfo.getRoles();
                     if (!CollectionUtils.isEmpty(roles)) {
                         roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
                     }
                     SecurityContextHolder.getContext().setAuthentication(
                             new UsernamePasswordAuthenticationToken(
                                     null, null, authorities));
+
+//                    //保存认证信息到requestHeader
+                    response.setHeader("userID", userInfo.getUserId());
+
                 } else {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    //response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    responseError(response, HttpServletResponse.SC_UNAUTHORIZED, "授权失败");
                     return;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            try {
+                responseError(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                throw new ServiceException(e1.getMessage());
+            }
             return;
         }
         filterChain.doFilter(request, response);
@@ -66,6 +80,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return token;
     }
+
+
+    private void responseError(HttpServletResponse response, int resultCode, String resultMsg) throws Exception {
+        JsonResult result = JsonResult.RESULT(resultCode, resultMsg, null);
+        String text = JSON.toJSONString(result);
+        response.setContentType("application/json; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(text);
+        response.getWriter().flush();
+    }
+
+
 
 
 }

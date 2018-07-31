@@ -60,6 +60,16 @@
         </dependency>
         <dependency>
             <artifactId>curator-framework</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
             <groupId>org.apache.curator</groupId>
             <version>2.10.0</version>
         </dependency>

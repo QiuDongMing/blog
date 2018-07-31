@@ -31,15 +31,6 @@ public class UserCache<T extends UserInfo> {
 
     public static void main(String[] args) {
 
-        String userId = "1001";
-        UserInfo user = new UserInfo();
-        user.setUserId(userId);
-        user.setUserName("aaa");
-
-        UserCache userCache = new UserCache();
-        userCache.put(userId, user);
-        UserInfo user1 = userCache.get(userId);
-        System.out.println("user1 = " + JSON.toJSONString(user1));
 
 
     }
