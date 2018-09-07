@@ -2,6 +2,7 @@ package com.codermi.blog.user.data.po;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.codermi.blog.user.enums.*;
 
 import java.util.List;
 
@@ -36,5 +37,17 @@ public class User {
     private Long createTime;
 
     private List<String> roles;
+
+    /**
+     * 用户状态
+     * @see UserEnum.UserStatus
+     */
+    private Integer status = 1;
+
+    /**
+     * 用户类型
+     * @see UserEnum.UserType
+     */
+    private Integer userType;
 
 }

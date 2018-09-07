@@ -1,6 +1,5 @@
 package com.codermi.blog.user.cache;
 
-import com.alibaba.fastjson.JSON;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.cache.factory.CacheFactory;
 import org.ehcache.Cache;

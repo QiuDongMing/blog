@@ -1,10 +1,13 @@
 package com.codermi.blog.controller.user;
 
+import com.alibaba.fastjson.JSON;
 import com.codermi.blog.mylearnpackage.spring.application.ApplicationContextAwareImplements;
+import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.data.UserOpenInfo;
 import com.codermi.blog.user.data.request.LoginRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
+import com.codermi.blog.user.service.ISecurityService;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.service.impl.UserServiceImpl;
 import com.codermi.common.base.utils.JsonResult;
@@ -33,6 +36,9 @@ public class UserController {
     private IUserService userService;
 
     @Autowired
+    private ISecurityService securityService;
+
+    @Autowired
     private ApplicationContextAwareImplements applicationContextAwareImplements;
 
     @GetMapping("test")
@@ -50,17 +56,17 @@ public class UserController {
     @ApiOperation(value = "用户注册", httpMethod = "POST" )
     @PostMapping("/register")
     public JsonResult login(@RequestBody @Valid RegisterRequest param) {
-        userService.register(param);
+        securityService.register(param);
         return JsonResult.SUCCESS();
     }
 
 
-    @ApiOperation(value = "用户登录", httpMethod = "POST", response = UserOpenInfo.class)
+    @ApiOperation(value = "用户登录", httpMethod = "POST", response = AccessToken.class)
     @PostMapping("/login")
     public JsonResult login(@RequestBody @Valid LoginRequest param) {
-        UserInfo userInfo = userService.loginByNickNamePassword(param.getNickName(), param.getPassword());
-        Map<String, String> map = Maps.newHashMap();
-        map.put("accessToken", JwtTokenUtil.generateToken(userInfo));
+        AccessToken accessToken = securityService.loginByNickNamePassword(param.getNickName(), param.getPassword());
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("accessToken", accessToken);
         return JsonResult.SUCCESS(map);
     }
 

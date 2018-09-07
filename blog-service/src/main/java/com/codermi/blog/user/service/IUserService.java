@@ -19,19 +19,7 @@ public interface IUserService {
      */
     UserInfo getUserInfo(String userId);
 
-    /**
-     * 根据昵称密码登陆
-     * @param nickName
-     * @param password
-     * @return
-     */
-    UserInfo loginByNickNamePassword(String nickName, String password);
 
-    /**
-     * 注册
-     * @param registerRequest
-     */
-    void register(RegisterRequest registerRequest);
 
 
 
