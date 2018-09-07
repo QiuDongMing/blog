@@ -16,12 +16,14 @@ import com.codermi.common.base.enums.ErrorCode;
 import com.codermi.common.base.utils.BeanUtil;
 import com.codermi.common.base.utils.MD5Util;
 import com.codermi.common.base.utils.StringUtils;
+import com.codermi.common.base.utils.ThreadPoolUtils;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author qiudm
@@ -55,6 +57,7 @@ public class SecurityServiceImpl implements ISecurityService {
                 userCacheUtil.put(user.getUserId(), userInfo);
                 AccessToken accessToken = setAccessToken(user);
                 cacheAccessToken(accessToken);
+                ThreadPoolUtils.execute(() -> cacheUserIdToken(accessToken.getUserId(), accessToken.getToken()));
                 return accessToken;
             }
             throw new ServiceException("用户名或密码错误");
@@ -124,14 +127,37 @@ public class SecurityServiceImpl implements ISecurityService {
      * @param accessToken
      */
     private void cacheAccessToken(AccessToken accessToken) {
-
         String token = accessToken.getToken();
         redisTemplate.opsForValue().set(
                 KeyBuilder.getCacheKey(Constants.CacheKeyPre.TOKEN_USER_LOGIN, token),
                 JSON.toJSONString(accessToken),
-                Constants.Expire.HOUR1
+                Constants.Expire.HOUR1,
+                TimeUnit.SECONDS
         );
     }
+
+    /**
+     * 缓存用户的token，并且让以前的token失效
+     * @param userId
+     * @param token
+     */
+    private void cacheUserIdToken(String userId, String token) {
+        String userIdTokenKey = KeyBuilder.getCacheKey(Constants.CacheKeyPre.USERID_TOKEN, userId);
+        String cacheUserToken = redisTemplate.opsForValue().getAndSet(userIdTokenKey, token);
+        if (StringUtils.isNotEmpty(cacheUserToken)) {
+            deleteUserToken(cacheUserToken);
+        }
+    }
+
+    /**
+     * 删除登录的用户token
+     * @param token
+     */
+    private void deleteUserToken(String token) {
+        String loginUserToken = KeyBuilder.getCacheKey(Constants.CacheKeyPre.TOKEN_USER_LOGIN, token);
+        redisTemplate.delete(loginUserToken);
+    }
+
 
 
     private UserInfo createUserInfo(User user) {
