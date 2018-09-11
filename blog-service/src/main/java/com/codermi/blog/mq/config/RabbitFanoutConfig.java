@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitFanoutConfig {
 
-
+    //123
     public static final String QDM_EXCHANGE_FANOUT = "QDM_EXCHANGE_FANOUT";
 
 //    @Bean
