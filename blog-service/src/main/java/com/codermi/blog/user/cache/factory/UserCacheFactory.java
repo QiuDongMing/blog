@@ -1,6 +1,7 @@
 package com.codermi.blog.user.cache.factory;
 
 import com.codermi.blog.user.cache.data.dto.UserInfo;
+import com.codermi.common.base.cache.CacheFactory;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -12,7 +13,7 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
  * @date 2018/7/20 11:40
  * @desc
  */
-public class CacheFactory {
+public class UserCacheFactory extends CacheFactory {
 
     private static final String USER_CACHE = "user";
     /**
@@ -20,12 +21,8 @@ public class CacheFactory {
      */
     private static final long HEAP_ENTRIES = 1000;
 
-    public CacheFactory() {
+    public UserCacheFactory() {
 
-    }
-
-    public static CacheManager getCacheManager() {
-        return CacheManagerBuilder.newCacheManagerBuilder().build(true);
     }
 
     public static final Cache getUserCache() {

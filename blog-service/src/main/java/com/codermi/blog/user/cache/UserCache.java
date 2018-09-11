@@ -1,7 +1,7 @@
 package com.codermi.blog.user.cache;
 
 import com.codermi.blog.user.cache.data.dto.UserInfo;
-import com.codermi.blog.user.cache.factory.CacheFactory;
+import com.codermi.blog.user.cache.factory.UserCacheFactory;
 import org.ehcache.Cache;
 
 /**
@@ -15,7 +15,7 @@ public class UserCache<T extends UserInfo> {
     private Cache cache = null;
 
     public UserCache() {
-        this.cache = CacheFactory.getUserCache();
+        this.cache = UserCacheFactory.getUserCache();
     }
 
 
