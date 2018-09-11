@@ -17,5 +17,6 @@ public class BlogApp {
         SpringApplication.run(BlogApp.class, args);
     }
 
+    //master add 1
 
 }
