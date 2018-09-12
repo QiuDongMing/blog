@@ -1,5 +1,7 @@
 package com.codermi.blog.exception;
 
+import com.codermi.common.base.enums.ErrorCode;
+
 /**
  * @author qiudm
  * @date 2018/7/27 3:02
@@ -21,6 +23,11 @@ public class ServiceException extends RuntimeException {
         super(message);
     }
 
+
+    public ServiceException(ErrorCode errorCode) {
+        super(errorCode.getErrMsg());
+        this.resultCode = errorCode.getErrorCode();
+    }
 
     public Integer getResultCode() {
         return resultCode;

@@ -1,7 +1,7 @@
-package com.codermi.sercurity.cache;
+package com.codermi.blog.user.cache;
 
 import com.codermi.blog.user.cache.data.dto.AccessToken;
-import com.codermi.sercurity.cache.factory.AccessManagerCacheFactory;
+import com.codermi.blog.user.cache.factory.AccessManagerCacheFactory;
 import org.ehcache.Cache;
 
 /**
@@ -9,7 +9,7 @@ import org.ehcache.Cache;
  * @date 2018/9/11 11:06
  * @desc
  */
-public class AccessTokenCache<T extends AccessToken> {
+public class AccessTokenCache <T extends AccessToken> {
 
     private Cache cache = null;
 
@@ -17,9 +17,12 @@ public class AccessTokenCache<T extends AccessToken> {
         cache = AccessManagerCacheFactory.getAccessTokenCache();
     }
 
-
     public void put(String token, T accessToken) {
         this.cache.put(token, accessToken);
+    }
+
+    public void remove(String token) {
+        this.cache.remove(token);
     }
 
     public T get(String token) {

@@ -1,4 +1,4 @@
-package com.codermi.sercurity.cache.factory;
+package com.codermi.blog.user.cache.factory;
 
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.common.base.cache.CacheFactory;

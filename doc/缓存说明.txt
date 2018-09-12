@@ -1,0 +1,17 @@
+Redis缓存：
+    1、登录用户的token:
+       保存类型：string
+       键值：userId_token:userId
+       值：token字符串
+       备注：无过期时间
+    2、token存储对应关系：
+       保存类型：string
+       键值：token_user_login:token
+       值：com.codermi.blog.user.cache.data.dto.AccessToken的json串
+       备注：有过期时间，用户登录后保存
+    3、用户信息缓存
+       保存类型：hash
+       键值：user:userId
+       值：com.codermi.blog.user.cache.data.dto.UserInfo
+       备注：无过期时间
+

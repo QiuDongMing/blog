@@ -24,9 +24,12 @@ public interface ISecurityService {
      */
     void register(RegisterRequest registerRequest);
 
-
-
-
+    /**
+     * 获取登录的token
+     * @param token
+     * @return
+     */
+    AccessToken getAccessToken(String token);
 
 
 

@@ -14,8 +14,10 @@ public enum ErrorCode {
     MISS_PARAM(100101, "缺少必填参数或参数错误"),
 
     USER_NOT_EXIT(100201, "账户不存在"),
-    USER_DISABLED(100202, "账户被禁用");
+    USER_DISABLED(100202, "账户被禁用"),
 
+
+    INVALID_TOKEN(100301, "token失效");
 
 
 

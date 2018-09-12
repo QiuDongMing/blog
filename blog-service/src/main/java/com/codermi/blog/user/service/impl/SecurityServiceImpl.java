@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.codermi.blog.common.constants.Constants;
 import com.codermi.blog.common.service.IIdIndexService;
 import com.codermi.blog.exception.ServiceException;
+import com.codermi.blog.user.cache.AccessTokenCache;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.dao.IUserDao;
@@ -10,18 +11,19 @@ import com.codermi.blog.user.data.po.User;
 import com.codermi.blog.user.data.request.RegisterRequest;
 import com.codermi.blog.user.enums.UserEnum;
 import com.codermi.blog.user.service.ISecurityService;
+import com.codermi.blog.user.utils.AccessTokenCacheUtil;
 import com.codermi.blog.user.utils.KeyBuilder;
 import com.codermi.blog.user.utils.UserCacheUtil;
 import com.codermi.common.base.enums.ErrorCode;
-import com.codermi.common.base.utils.BeanUtil;
-import com.codermi.common.base.utils.MD5Util;
-import com.codermi.common.base.utils.StringUtils;
-import com.codermi.common.base.utils.ThreadPoolUtils;
+import com.codermi.common.base.utils.*;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +35,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SecurityServiceImpl implements ISecurityService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
+
     @Autowired
     private IUserDao userDao;
 
@@ -41,6 +45,9 @@ public class SecurityServiceImpl implements ISecurityService {
 
     @Autowired
     private UserCacheUtil userCacheUtil;
+
+    @Autowired
+    private AccessTokenCacheUtil accessTokenCacheUtil;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -57,7 +64,10 @@ public class SecurityServiceImpl implements ISecurityService {
                 userCacheUtil.put(user.getUserId(), userInfo);
                 AccessToken accessToken = setAccessToken(user);
                 cacheAccessToken(accessToken);
-                ThreadPoolUtils.execute(() -> cacheUserIdToken(accessToken.getUserId(), accessToken.getToken()));
+                ThreadPoolUtils.execute(() -> {
+                    cacheUserIdToken(accessToken.getUserId(), accessToken.getToken());
+                    cacheUserInfo(userInfo);
+                });
                 return accessToken;
             }
             throw new ServiceException("用户名或密码错误");
@@ -99,6 +109,20 @@ public class SecurityServiceImpl implements ISecurityService {
             throw new ServiceException(e.getMessage());
         }
 
+    }
+
+    @Override
+    public AccessToken getAccessToken(String token) {
+        AccessToken accessToken = null;
+        if(token == null) return accessToken;
+        accessToken = accessTokenCacheUtil.get(token);
+        if (accessToken == null) {
+            String accessTokenStr = redisTemplate
+                    .opsForValue().get(KeyBuilder.getCacheKey(Constants.CacheKeyPre.TOKEN_USER_LOGIN, token));
+            accessToken = JSON.parseObject(accessTokenStr, AccessToken.class);
+            accessTokenCacheUtil.put(token, accessToken);
+        }
+        return accessToken;
     }
 
     /**
@@ -163,5 +187,20 @@ public class SecurityServiceImpl implements ISecurityService {
     private UserInfo createUserInfo(User user) {
         return BeanUtil.copy(user, UserInfo.class);
     }
+
+    /**
+     * 缓存用户信息
+     * @param userInfo
+     */
+    private void cacheUserInfo(UserInfo userInfo) {
+        try {
+            String key = KeyBuilder.getCacheKey(Constants.CacheKeyPre.USER_INFO, userInfo.getUserId());
+            Map<String, Object> userInfoMap = MapUtil.beanToMap(userInfo);
+            redisTemplate.opsForHash().putAll(key, userInfoMap);
+        } catch (Exception e){
+            LOGGER.error("cache userInfo failed:", e);
+        }
+    }
+
 
 }

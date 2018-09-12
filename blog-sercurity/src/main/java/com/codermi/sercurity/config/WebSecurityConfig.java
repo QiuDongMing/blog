@@ -1,6 +1,8 @@
 package com.codermi.sercurity.config;
 
+import com.codermi.sercurity.filter.AuthenticationFilter;
 import com.codermi.sercurity.filter.JwtAuthenticationFilter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -59,12 +61,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(AUTH_WHITE_LIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(new JwtAuthenticationFilter(),
+//                        UsernamePasswordAuthenticationFilter.class);
+
     }
 
 
-
-
+    @Bean
+    public AuthenticationFilter authenticationFilter() {
+        return new AuthenticationFilter();
+    }
 
 }
