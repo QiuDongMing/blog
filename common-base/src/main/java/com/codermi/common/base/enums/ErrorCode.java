@@ -10,6 +10,8 @@ public enum ErrorCode {
     FAILURE(0, "失败"),
     SUCCESS(1, "成功"),
 
+    FORBIDEN_ACCESS(403, "禁止访问，无访问权限"),
+
     ERROR(100100, "服务器繁忙"),
     MISS_PARAM(100101, "缺少必填参数或参数错误"),
 
@@ -18,6 +20,7 @@ public enum ErrorCode {
 
 
     INVALID_TOKEN(100301, "token失效");
+
 
 
 

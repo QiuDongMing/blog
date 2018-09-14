@@ -11,6 +11,7 @@ import com.codermi.blog.user.data.po.User;
 import com.codermi.blog.user.data.request.RegisterRequest;
 import com.codermi.blog.user.enums.UserEnum;
 import com.codermi.blog.user.service.ISecurityService;
+import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.utils.AccessTokenCacheUtil;
 import com.codermi.blog.user.utils.KeyBuilder;
 import com.codermi.blog.user.utils.UserCacheUtil;
@@ -52,6 +53,9 @@ public class SecurityServiceImpl implements ISecurityService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private IUserService userService;
+
 
     @Override
     public AccessToken loginByNickNamePassword(String nickName, String password) {
@@ -66,7 +70,7 @@ public class SecurityServiceImpl implements ISecurityService {
                 cacheAccessToken(accessToken);
                 ThreadPoolUtils.execute(() -> {
                     cacheUserIdToken(accessToken.getUserId(), accessToken.getToken());
-                    cacheUserInfo(userInfo);
+                    userService.cacheUserInfo(userInfo);
                 });
                 return accessToken;
             }
@@ -120,7 +124,9 @@ public class SecurityServiceImpl implements ISecurityService {
             String accessTokenStr = redisTemplate
                     .opsForValue().get(KeyBuilder.getCacheKey(Constants.CacheKeyPre.TOKEN_USER_LOGIN, token));
             accessToken = JSON.parseObject(accessTokenStr, AccessToken.class);
-            accessTokenCacheUtil.put(token, accessToken);
+            if(accessToken != null) {
+                accessTokenCacheUtil.put(token, accessToken);
+            }
         }
         return accessToken;
     }
@@ -183,24 +189,11 @@ public class SecurityServiceImpl implements ISecurityService {
     }
 
 
-
     private UserInfo createUserInfo(User user) {
         return BeanUtil.copy(user, UserInfo.class);
     }
 
-    /**
-     * 缓存用户信息
-     * @param userInfo
-     */
-    private void cacheUserInfo(UserInfo userInfo) {
-        try {
-            String key = KeyBuilder.getCacheKey(Constants.CacheKeyPre.USER_INFO, userInfo.getUserId());
-            Map<String, Object> userInfoMap = MapUtil.beanToMap(userInfo);
-            redisTemplate.opsForHash().putAll(key, userInfoMap);
-        } catch (Exception e){
-            LOGGER.error("cache userInfo failed:", e);
-        }
-    }
+
 
 
 }

@@ -34,14 +34,4 @@ public class ArticleController {
         return JsonResult.SUCCESS();
     }
 
-
-
-
-
-
-
-
-
-
-
 }

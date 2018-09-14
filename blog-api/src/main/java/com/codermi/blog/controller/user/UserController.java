@@ -1,22 +1,20 @@
 package com.codermi.blog.controller.user;
 
-import com.alibaba.fastjson.JSON;
 import com.codermi.blog.mylearnpackage.spring.application.ApplicationContextAwareImplements;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
-import com.codermi.blog.user.cache.data.dto.UserInfo;
-import com.codermi.blog.user.data.UserOpenInfo;
 import com.codermi.blog.user.data.request.LoginRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
 import com.codermi.blog.user.service.ISecurityService;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.service.impl.UserServiceImpl;
 import com.codermi.common.base.utils.JsonResult;
-import com.codermi.sercurity.utils.JwtTokenUtil;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @desc
  */
 @Api(value = "用户相关")
-@RequestMapping("user")
+@RequestMapping("/user")
 @RestController
 public class UserController {
 
@@ -41,7 +39,9 @@ public class UserController {
     @Autowired
     private ApplicationContextAwareImplements applicationContextAwareImplements;
 
-    @GetMapping("test")
+    @PreAuthorize("isAuthenticated()")
+    @Secured({"ROLE_USER"})
+    @RequestMapping("test")
     public JsonResult test() {
         ApplicationContext applicationContext = applicationContextAwareImplements.getApplicationContext();
 
@@ -51,7 +51,6 @@ public class UserController {
 
         return JsonResult.SUCCESS("测试");
     }
-
 
     @ApiOperation(value = "用户注册", httpMethod = "POST" )
     @PostMapping("/register")
@@ -69,6 +68,16 @@ public class UserController {
         map.put("accessToken", accessToken);
         return JsonResult.SUCCESS(map);
     }
+
+
+
+
+
+
+
+
+
+
 
 
 

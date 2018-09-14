@@ -19,7 +19,11 @@ public interface IUserService {
      */
     UserInfo getUserInfo(String userId);
 
-
+    /**
+     * 缓存用户信息到redis
+     * @param userInfo
+     */
+    void cacheUserInfo(UserInfo userInfo);
 
 
 

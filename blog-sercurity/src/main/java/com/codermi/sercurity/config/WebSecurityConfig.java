@@ -1,14 +1,19 @@
 package com.codermi.sercurity.config;
 
+import com.codermi.blog.user.service.ISecurityService;
+import com.codermi.blog.user.service.IUserService;
 import com.codermi.sercurity.filter.AuthenticationFilter;
 import com.codermi.sercurity.filter.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -18,11 +23,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_WHITE_LIST = {
+    @Autowired
+    private AuthenticationFilter authenticationFilter;
 
+
+    private static final String[] AUTH_WHITE_LIST = {
             // -- swagger ui
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -30,10 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**"
     };
 
-
     /**
      *
-     * @param http
+     * @param httpSecurity
      * @throws Exception
      * 通过authorizeRequests()定义哪些URL需要被保护、哪些不需要被保护。
      *   1、http.authorizeRequests()方法有多个子节点，每个macher按照他们的声明顺序执行。
@@ -44,33 +51,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      *
      */
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()  //1
-//                .antMatchers("/resources/**", "/signup", "/about").permitAll() //2
-//                .antMatchers("/admin/**").hasRole("ADMIN") //3
-//                .antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")//4
-//                .anyRequest().authenticated()   //5
-//                .and()
-//                // ...
-//                .formLogin();
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
-                .antMatchers(AUTH_WHITE_LIST).permitAll()
+
+        httpSecurity
+                .csrf().disable();
+
+/**
+        httpSecurity.authorizeRequests()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(urlAccessDecisionManager);
+                        return o;
+                    }
+                }).anyRequest().authenticated().and().addFilterBefore(authenticationFilter,
+                UsernamePasswordAuthenticationFilter.class);
+    **/
+
+
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/**").permitAll()
+//                .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
+//                .antMatchers(AUTH_WHITE_LIST).permitAll()
+
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//                .addFilterBefore(new JwtAuthenticationFilter(),
+                .addFilterBefore(authenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
+
+////                .addFilterBefore(new JwtAuthenticationFilter(),
 //                        UsernamePasswordAuthenticationFilter.class);
 
+
     }
 
 
-    @Bean
-    public AuthenticationFilter authenticationFilter() {
-        return new AuthenticationFilter();
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

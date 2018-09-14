@@ -5,6 +5,7 @@ import com.codermi.common.base.enums.ErrorCode;
 import com.codermi.common.base.utils.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,9 +54,11 @@ public class ExceptionHandlerAdvice {
                 resultCode = ErrorCode.MISS_PARAM.getErrorCode();
                 List<ObjectError> allErrors = ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors();
                 resultMsg = allErrors.get(0).getDefaultMessage();
+            } else if(e instanceof AccessDeniedException) {
+                resultCode = ErrorCode.FORBIDEN_ACCESS.getErrorCode();
+                resultMsg = e.getMessage();
             } else if (e instanceof ServiceException) {
                 ServiceException ex = ((ServiceException) e);
-
                 resultCode = null == ex.getResultCode() ? 0 : ex.getResultCode();
                 resultMsg = ex.getMessage();
             } else {

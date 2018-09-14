@@ -1,6 +1,5 @@
 package com.codermi.blog.controller.article;
 
-import com.codermi.blog.article.data.request.ArticleRequest;
 import com.codermi.blog.article.service.IArticleCategoryService;
 import com.codermi.common.base.utils.JsonResult;
 import io.swagger.annotations.Api;
