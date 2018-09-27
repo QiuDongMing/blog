@@ -1,19 +1,16 @@
 package com.codermi.sercurity.config;
 
-import com.codermi.blog.user.service.ISecurityService;
-import com.codermi.blog.user.service.IUserService;
 import com.codermi.sercurity.filter.AuthenticationFilter;
-import com.codermi.sercurity.filter.JwtAuthenticationFilter;
+import com.codermi.sercurity.filter.CustomAccessDeniedHandler;
+import com.codermi.sercurity.filter.CustomHttp403ForbiddenEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -35,7 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            //--公开的无需登录的
+            "/**/open/**"
     };
 
     /**
@@ -69,25 +68,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 UsernamePasswordAuthenticationFilter.class);
     **/
 
-
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-//                .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
-//                .antMatchers(AUTH_WHITE_LIST).permitAll()
-
+                .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
+                .antMatchers(AUTH_WHITE_LIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(authenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-////                .addFilterBefore(new JwtAuthenticationFilter(),
-//                        UsernamePasswordAuthenticationFilter.class);
 
+        httpSecurity.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler()).and()
+                .exceptionHandling().authenticationEntryPoint(new CustomHttp403ForbiddenEntryPoint());
 
     }
-
-
 
 
 

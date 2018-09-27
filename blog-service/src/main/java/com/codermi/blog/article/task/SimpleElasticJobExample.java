@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  */
 @ElasticJobConf(
         name = "blog_example",
-        cron = "0 0/5 * * * ? ",
+        cron = "0 0 2/2 1/1 * ? ",
         jobExceptionHandler = "com.codermi.elasticjob.handler.JobExceptionHandler",
         description = "分布式作业调度测试"
 

@@ -6,8 +6,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "文章分类相关")
 @RequestMapping("article/category")
 @RestController
+@Validated
 public class ArticleCategoryController {
 
     @Autowired
@@ -30,13 +32,8 @@ public class ArticleCategoryController {
             @ApiImplicitParam(name = "name", value = "分类名称", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/save")
-    public JsonResult save(@RequestParam @NotEmpty String name) {
+    public JsonResult save(@NotBlank(message = "文章分类名称不能为空") @RequestParam String name) {
+        System.out.println("name = " + name);
         return JsonResult.SUCCESS(articleCategoryService.saveArticleCategory(name));
     }
-
-
-
-
-
-
 }

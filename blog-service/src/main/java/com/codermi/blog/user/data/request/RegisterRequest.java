@@ -2,6 +2,7 @@ package com.codermi.blog.user.data.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -20,6 +21,7 @@ public class RegisterRequest {
     private String password;
 
     @ApiModelProperty("邮箱")
+    @Email
     private String email;
 
 }

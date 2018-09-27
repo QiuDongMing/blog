@@ -1,24 +1,24 @@
 package com.codermi.sercurity.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.codermi.blog.exception.ServiceException;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.service.ISecurityService;
 import com.codermi.blog.user.service.IUserService;
-import com.codermi.blog.user.utils.AccessTokenCacheUtil;
 import com.codermi.common.base.enums.ErrorCode;
-import com.codermi.common.base.utils.JsonResult;
+import com.codermi.sercurity.Constants.NoFilterUrl;
+import com.codermi.sercurity.utils.HttpUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -45,54 +45,55 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private IUserService userService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        //是否要过滤
+        if (filterUrl(request)) {
+            String token = getToken(request);
+            try {
+                if (token != null) {
+                    AccessToken accessToken = validateAccessToken(token, response);
+                    UserInfo userInfo = userService.getUserInfo(accessToken.getUserId());
+                    if (Objects.nonNull(userInfo)) {
+                        //最关键的部分就是这里, 我们直接注入了Role信息
+                        List<SimpleGrantedAuthority> authorities = Lists.newArrayList();
+                        List<String> roles = userInfo.getRoles();
+                        if (!CollectionUtils.isEmpty(roles)) {
+                            roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
+                        }
+                        SecurityContextHolder.getContext().setAuthentication(
+                                new UsernamePasswordAuthenticationToken(
+                                        null, null, authorities));
 
-        filterUrl(request);
-
-        String token = getToken(request);
-        try {
-            if (token != null) {
-                AccessToken accessToken = validateAccessToken(token, response);
-                UserInfo userInfo = userService.getUserInfo(accessToken.getUserId());
-                if (Objects.nonNull(userInfo)) {
-                    //最关键的部分就是这里, 我们直接注入了Role信息
-                    List<SimpleGrantedAuthority> authorities = Lists.newArrayList();
-                    List<String> roles = userInfo.getRoles();
-                    if (!CollectionUtils.isEmpty(roles)) {
-                        roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
+                        //保存认证信息到requestHeader
+                        response.setHeader("userID", userInfo.getUserId());
+                    } else {
+                        HttpUtils.responseError(response, HttpServletResponse.SC_UNAUTHORIZED, "授权失败");
+                        return;
                     }
-                    SecurityContextHolder.getContext().setAuthentication(
-                            new UsernamePasswordAuthenticationToken(
-                                    null, null, authorities));
-
-                    //保存认证信息到requestHeader
-                    response.setHeader("userID", userInfo.getUserId());
-                } else {
-                    responseError(response, HttpServletResponse.SC_UNAUTHORIZED, "授权失败");
+                }
+            } catch (ServiceException e) {
+                e.printStackTrace();
+                try {
+                    HttpUtils.responseError(response, e.getResultCode(), e.getMessage());
                     return;
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    HttpUtils.responseError(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                    return;
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    throw new ServiceException(e1.getMessage());
                 }
             }
-        } catch (ServiceException e) {
-            e.printStackTrace();
-            try {
-                responseError(response, e.getResultCode(), e.getMessage());
-                return;
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                responseError(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-                return;
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                throw new ServiceException(e1.getMessage());
-            }
+
         }
+
         filterChain.doFilter(request, response);
     }
 
@@ -105,16 +106,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-    private void responseError(HttpServletResponse response, int resultCode, String resultMsg) throws Exception {
-        JsonResult result = JsonResult.RESULT(resultCode, resultMsg, null);
-        String text = JSON.toJSONString(result);
-        response.setContentType("application/json; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(text);
-        response.getWriter().flush();
-    }
-
-
+    /**
+     * 获取请求头的token
+     *
+     * @param request
+     * @return
+     */
     private String getToken(HttpServletRequest request) {
         String token = request.getHeader("access-token");
         if (token == null) {
@@ -127,15 +124,25 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
 
+    /**
+     * 请求路径是否需要过滤
+     *
+     * @param request
+     * @return
+     */
     private boolean filterUrl(HttpServletRequest request) {
-        boolean filter = false;
-
+        boolean filter = true;
         String uri = request.getRequestURI();
-
+        String[] urlNoFilterArray = NoFilterUrl.URL_NO_FILTER_ARRAY;
+        PathMatcher pathMatcher = new AntPathMatcher();
+        for (String noFilterPatternUrl : urlNoFilterArray) {
+            if (pathMatcher.match(noFilterPatternUrl, uri)) {
+                filter = false;
+                break;
+            }
+        }
         return filter;
     }
-
-
 
 
 }

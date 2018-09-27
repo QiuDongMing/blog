@@ -19,9 +19,8 @@ public enum ErrorCode {
     USER_DISABLED(100202, "账户被禁用"),
 
 
-    INVALID_TOKEN(100301, "token失效");
-
-
+    INVALID_TOKEN(100301, "token失效"),
+    NEED_LOGIN(100302, "未登录");
 
 
     private Integer errorCode;

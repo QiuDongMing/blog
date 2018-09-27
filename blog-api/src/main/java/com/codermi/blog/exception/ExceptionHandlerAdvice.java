@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author qiudm
@@ -61,6 +64,13 @@ public class ExceptionHandlerAdvice {
                 ServiceException ex = ((ServiceException) e);
                 resultCode = null == ex.getResultCode() ? 0 : ex.getResultCode();
                 resultMsg = ex.getMessage();
+            } else if(e instanceof ConstraintViolationException) {
+                ConstraintViolationException ex = (ConstraintViolationException) e;
+                Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
+                for (ConstraintViolation<?> violation : violations) {
+                    resultMsg = violation.getMessage();
+                    break;
+                }
             } else {
                 detailMsg = e.getMessage();
             }

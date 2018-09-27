@@ -4,6 +4,7 @@ import com.codermi.blog.mylearnpackage.spring.application.ApplicationContextAwar
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.data.request.LoginRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
+import com.codermi.blog.user.data.request.group.AddGroup;
 import com.codermi.blog.user.service.ISecurityService;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.service.impl.UserServiceImpl;
@@ -13,8 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,8 +39,8 @@ public class UserController {
     @Autowired
     private ApplicationContextAwareImplements applicationContextAwareImplements;
 
-    @PreAuthorize("isAuthenticated()")
-    @Secured({"ROLE_USER"})
+//    @PreAuthorize("isAuthenticated()")
+//    @Secured({"ROLE_USER"})
     @RequestMapping("test")
     public JsonResult test() {
         ApplicationContext applicationContext = applicationContextAwareImplements.getApplicationContext();
@@ -50,6 +50,11 @@ public class UserController {
         UserServiceImpl bean = applicationContext.getBean(UserServiceImpl.class);
 
         return JsonResult.SUCCESS("测试");
+    }
+
+    @RequestMapping("/open/test")
+    public JsonResult open() {
+        return JsonResult.SUCCESS("测试open");
     }
 
     @ApiOperation(value = "用户注册", httpMethod = "POST" )
@@ -62,7 +67,7 @@ public class UserController {
 
     @ApiOperation(value = "用户登录", httpMethod = "POST", response = AccessToken.class)
     @PostMapping("/login")
-    public JsonResult login(@RequestBody @Valid LoginRequest param) {
+    public JsonResult login(@RequestBody @Validated LoginRequest param) {
         AccessToken accessToken = securityService.loginByNickNamePassword(param.getNickName(), param.getPassword());
         Map<String, Object> map = Maps.newHashMap();
         map.put("accessToken", accessToken);
