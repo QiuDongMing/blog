@@ -7,9 +7,8 @@ package com.codermi.common.base.constants;
  */
 public class QiniuConstant {
 
-    public static final String DEFAULT_BUCKET = "community";
+    public static final String DEFAULT_BUCKET = "blog";
 
     public static final long EXPIRE_SECONDS = 60;
-
 
 }

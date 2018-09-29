@@ -6,6 +6,8 @@ import com.codermi.blog.article.service.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author qiudm
  * @date 2018/7/30 11:03
@@ -24,11 +26,16 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
 
+    @Override
+    public List<Article> getByArticleCategory(String userId, String articleCategoryId) {
+        return null;
+    }
 
 
-
-
-
+    @Override
+    public int getCountByArticleCategory(String userId, String articleCategoryId) {
+        return articleDao.getCountByArticleCategory(userId, articleCategoryId);
+    }
 
 
 

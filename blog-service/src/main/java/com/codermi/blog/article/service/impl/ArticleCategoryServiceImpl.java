@@ -3,11 +3,14 @@ package com.codermi.blog.article.service.impl;
 import com.codermi.blog.article.dao.IArticleCategoryDao;
 import com.codermi.blog.article.data.po.ArticleCategory;
 import com.codermi.blog.article.service.IArticleCategoryService;
+import com.codermi.blog.article.service.IArticleService;
 import com.codermi.blog.common.utils.ReqUtil;
 import com.codermi.blog.exception.ServiceException;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -20,6 +23,10 @@ public class ArticleCategoryServiceImpl implements IArticleCategoryService {
 
     @Autowired
     private IArticleCategoryDao articleCategoryDao;
+
+    @Autowired
+    private IArticleService articleService;
+
 
     @Override
     public String saveArticleCategory(String name) {
@@ -35,6 +42,46 @@ public class ArticleCategoryServiceImpl implements IArticleCategoryService {
         articleCategory.setCreateTime(System.currentTimeMillis());
         return articleCategoryDao.saveArticleCategory(articleCategory);
     }
+
+
+    @Override
+    public void updateArticleCategoryName(String userId, String id, String newName) {
+        ArticleCategory articleCategory = articleCategoryDao.getById(id);
+        if (articleCategory == null) {
+            throw new ServiceException("不存在该文章");
+        }
+        if (!Objects.equals(userId, articleCategory.getUserId())) {
+            throw new ServiceException("非创建者不能修改");
+        }
+        Map<String, Object> updateField = Maps.newHashMap();
+        updateField.put("name", newName);
+        updateField.put("updateTime", System.currentTimeMillis());
+        articleCategoryDao.update(id, updateField);
+    }
+
+
+    @Override
+    public void deleteArticleCategory(String userId, String id) {
+        ArticleCategory articleCategory = articleCategoryDao.getById(id);
+        if (articleCategory == null) {
+            throw new ServiceException("不存在该文章");
+        }
+        if (!Objects.equals(userId, articleCategory.getUserId())) {
+            throw new ServiceException("非创建者不能删除");
+        }
+
+        int articleCount = articleService.getCountByArticleCategory(userId, id);
+        if(articleCount > 0) {
+            throw new ServiceException("该分类下存在文章不能删除");
+        }
+        articleCategoryDao.delete(id);
+    }
+
+
+
+
+
+
 
 
 

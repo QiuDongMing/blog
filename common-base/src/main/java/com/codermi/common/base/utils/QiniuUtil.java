@@ -30,23 +30,25 @@ public class QiniuUtil {
         }
         if (auth == null) {
             auth = Auth.create(PropertiesUtil.getContextProperty("qiniu.accessKey"),
-                    PropertiesUtil.getContextProperty("qiniu.accessKey"));
+                    PropertiesUtil.getContextProperty("qiniu.secretKey"));
         }
         PUT_POLICY.put("returnBody",
                 "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
     }
 
 
-    public static String upload(byte[] bytes, String fileName) {
-        try {
-            uploadManager.put(bytes, fileName, getUploadToken());
-        } catch (QiniuException e) {
-            e.printStackTrace();
-        }
+    public static String upload(byte[] bytes, String fileName) throws QiniuException {
+        uploadManager.put(bytes, fileName, getUploadToken());
         return fileName;
     }
 
-    private static String getUploadToken() {
+    public static String upload(byte[] bytes) throws QiniuException {
+        String fileName = StringUtils.randomUUID();
+        uploadManager.put(bytes, fileName, getUploadToken());
+        return fileName;
+    }
+
+    public static String getUploadToken() {
         Long currentTime = System.currentTimeMillis();
         //缓存50秒
         if ((currentTime - tokenUpdateTime) > (50 * 1000)) {
@@ -55,5 +57,6 @@ public class QiniuUtil {
         }
         return upToken;
     }
+
 
 }

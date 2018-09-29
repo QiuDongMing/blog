@@ -11,4 +11,8 @@ public interface IArticleDao {
 
     void saveArticle(Article article);
 
+
+    int getCountByArticleCategory(String userId, String articleCategoryId);
+
+
 }

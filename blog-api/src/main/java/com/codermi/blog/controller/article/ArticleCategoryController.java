@@ -33,7 +33,6 @@ public class ArticleCategoryController {
     })
     @PostMapping("/save")
     public JsonResult save(@NotBlank(message = "文章分类名称不能为空") @RequestParam String name) {
-        System.out.println("name = " + name);
         return JsonResult.SUCCESS(articleCategoryService.saveArticleCategory(name));
     }
 }

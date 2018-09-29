@@ -4,6 +4,8 @@ import com.codermi.blog.article.dao.IArticleDao;
 import com.codermi.blog.article.data.po.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,4 +23,11 @@ public class ArticleDaoImpl implements IArticleDao {
         mongoTemplate.save(article);
     }
 
+
+    @Override
+    public int getCountByArticleCategory(String userId, String articleCategoryId) {
+        Query query = Query.query(Criteria.where("userId").is(userId).and("articleCategoryId").is(articleCategoryId));
+        long count = mongoTemplate.count(query, Article.class);
+        return (int) count;
+    }
 }
