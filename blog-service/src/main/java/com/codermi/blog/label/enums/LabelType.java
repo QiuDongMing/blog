@@ -18,4 +18,7 @@ public enum LabelType {
         this.desc = desc;
     }
 
+    public Integer getType() {
+        return type;
+    }
 }

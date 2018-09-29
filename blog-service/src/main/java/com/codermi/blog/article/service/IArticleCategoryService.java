@@ -1,6 +1,8 @@
 package com.codermi.blog.article.service;
 
 
+import com.codermi.blog.article.data.po.ArticleCategory;
+
 /**
  * @author qiudm
  * @date 2018/7/31 17:14
@@ -28,6 +30,9 @@ public interface IArticleCategoryService {
      * @param id
      */
     void deleteArticleCategory(String userId, String id);
+
+
+    ArticleCategory getById(String id);
 
 
 }

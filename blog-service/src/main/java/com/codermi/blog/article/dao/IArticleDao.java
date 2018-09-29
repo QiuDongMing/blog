@@ -9,7 +9,7 @@ import com.codermi.blog.article.data.po.Article;
  */
 public interface IArticleDao {
 
-    void saveArticle(Article article);
+    String saveArticle(Article article);
 
 
     int getCountByArticleCategory(String userId, String articleCategoryId);

@@ -1,6 +1,6 @@
 package com.codermi.blog.article.data.po;
 
-import com.codermi.blog.common.data.Content;
+import com.codermi.blog.common.data.po.BaseInfo;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,19 +14,24 @@ import java.util.List;
  */
 @Document(collection = "t_article")
 @Data
-public class Article {
-
-    @Id
-    private String id;
+public class Article extends BaseInfo {
 
     private String userId;
-
-    private Content content;
 
     /**
      * 文章分类Id
      */
     private String categoryId;
+
+    /**
+     * 文章标题
+     */
+    private String title;
+
+    /**
+     * 文章内容
+     */
+    private String content;
 
     /**
      * 标签id
@@ -37,9 +42,5 @@ public class Article {
      * 置顶时间
      */
     private Long stickTime;
-
-    private Long updateTime;
-
-    private Long createTime;
 
 }

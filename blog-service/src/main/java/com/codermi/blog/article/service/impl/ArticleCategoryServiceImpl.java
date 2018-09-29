@@ -77,12 +77,10 @@ public class ArticleCategoryServiceImpl implements IArticleCategoryService {
         articleCategoryDao.delete(id);
     }
 
-
-
-
-
-
-
+    @Override
+    public ArticleCategory getById(String id) {
+        return articleCategoryDao.getById(id);
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.codermi.blog.article.service;
 
 import com.codermi.blog.article.data.po.Article;
+import com.codermi.blog.article.data.request.ArticleRequest;
 
 import java.util.List;
 
@@ -13,9 +14,10 @@ public interface IArticleService {
 
     /**
      * 新增文章
-     * @param article
+     * @param userId 发布者
+     * @param articleRequest
      */
-    void saveArticle(Article article);
+    String saveArticle(String userId, ArticleRequest articleRequest);
 
     /**
      * 获取某分类下的文章列表(应该要分页)

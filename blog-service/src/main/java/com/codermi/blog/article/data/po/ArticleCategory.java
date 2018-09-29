@@ -1,5 +1,6 @@
 package com.codermi.blog.article.data.po;
 
+import com.codermi.blog.common.data.po.BaseInfo;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,10 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "t_article_category")
 @Data
-public class ArticleCategory {
-
-    @Id
-    private String id;
+public class ArticleCategory extends BaseInfo {
 
     /**
      * 分类名称
@@ -25,9 +23,5 @@ public class ArticleCategory {
      * 用户id
      */
     private String userId;
-
-    private Long updateTime;
-
-    private Long createTime;
 
 }

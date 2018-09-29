@@ -19,8 +19,9 @@ public class ArticleDaoImpl implements IArticleDao {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void saveArticle(Article article) {
+    public String saveArticle(Article article) {
         mongoTemplate.save(article);
+        return article.getId();
     }
 
 
