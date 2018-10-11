@@ -1,5 +1,6 @@
 package test;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -11,12 +12,8 @@ public class JDKTest {
 
     @Test
     public void setVal() {
-
-
-
+        Assert.assertEquals(2,3);
     }
-
-
 
 
 }

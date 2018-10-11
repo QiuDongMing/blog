@@ -2,9 +2,7 @@ package com.codermi.sercurity.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
-import com.codermi.blog.user.data.UserOpenInfo;
 import com.codermi.common.base.utils.StringUtils;
-import com.google.common.collect.Lists;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

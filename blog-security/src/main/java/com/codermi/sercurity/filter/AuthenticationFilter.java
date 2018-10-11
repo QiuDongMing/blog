@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,8 +49,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        MyHttpServletRequestWrapper myHttpServletRequestWrapper = new MyHttpServletRequestWrapper(request);
         //是否要过滤
-        if (filterUrl(request)) {
+        boolean filterUrl = filterUrl(request);
+        if (filterUrl) {
             String token = getToken(request);
             try {
                 if (token != null) {
@@ -65,9 +69,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(
                                 new UsernamePasswordAuthenticationToken(
                                         null, null, authorities));
-
                         //保存认证信息到requestHeader
-                        response.setHeader("userID", userInfo.getUserId());
+                        myHttpServletRequestWrapper.putHeader("userID", userInfo.getUserId());
                     } else {
                         HttpUtils.responseError(response, HttpServletResponse.SC_UNAUTHORIZED, "授权失败");
                         return;
@@ -94,7 +97,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(myHttpServletRequestWrapper, response);
     }
 
     private AccessToken validateAccessToken(String token, HttpServletResponse response) {

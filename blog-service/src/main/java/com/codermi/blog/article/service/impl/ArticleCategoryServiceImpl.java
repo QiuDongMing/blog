@@ -31,6 +31,7 @@ public class ArticleCategoryServiceImpl implements IArticleCategoryService {
     @Override
     public String saveArticleCategory(String name) {
         String userId = ReqUtil.instance.getUserId();
+        System.out.println("userId = " + userId);
         ArticleCategory articleCategory = articleCategoryDao.getByUserIdName(userId, name.trim());
         if (Objects.nonNull(articleCategory)) {
             throw new ServiceException("该文章分类已经存在");

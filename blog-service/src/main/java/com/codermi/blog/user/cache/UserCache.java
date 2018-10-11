@@ -28,11 +28,4 @@ public class UserCache<T extends UserInfo> {
     }
 
 
-    public static void main(String[] args) {
-
-
-
-    }
-
-
 }

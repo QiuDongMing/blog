@@ -8,7 +8,7 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>blog-sercurity</artifactId>
+    <artifactId>blog-security</artifactId>
 
     <dependencies>
         <dependency>
@@ -27,9 +27,20 @@
             <artifactId>jjwt</artifactId>
             <version>0.7.0</version>
         </dependency>
-
-
     </dependencies>
+
+    <build>
+        <finalName>blog-security</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

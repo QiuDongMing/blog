@@ -5,6 +5,7 @@ import com.codermi.blog.article.service.IArticleService;
 import com.codermi.blog.common.utils.ReqUtil;
 import com.codermi.blog.user.data.request.group.AddGroup;
 import com.codermi.common.base.utils.JsonResult;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * @author qiudm
@@ -37,8 +40,26 @@ public class ArticleController {
     @PostMapping("/publish")
     public JsonResult publish(@RequestBody @Validated(value = AddGroup.class) ArticleRequest articleRequest) {
         String userId = ReqUtil.instance.getUserId();
-        articleService.saveArticle(userId, articleRequest);
-        return JsonResult.SUCCESS();
+        String id = articleService.saveArticle(userId, articleRequest);
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("id", id);
+        return JsonResult.SUCCESS(map);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

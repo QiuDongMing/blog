@@ -12,7 +12,7 @@
         <module>blog-api</module>
         <module>blog-service</module>
         <module>elastic-job</module>
-        <module>blog-sercurity</module>
+        <module>blog-security</module>
     </modules>
 
     <properties>
@@ -58,21 +58,12 @@
     </dependencies>
 
     <build>
+        <finalName>blog</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 

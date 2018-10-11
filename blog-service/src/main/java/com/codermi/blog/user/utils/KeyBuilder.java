@@ -12,10 +12,6 @@ public class KeyBuilder {
         return String.format("%1$s:%2$s", keyPre, keyAfter);
     }
 
-    public static void main(String[] args) {
-        System.out.println("token = " + getCacheKey("token", "123"));
-    }
-
 
 
 }

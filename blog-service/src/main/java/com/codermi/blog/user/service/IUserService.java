@@ -1,9 +1,6 @@
 package com.codermi.blog.user.service;
 
 import com.codermi.blog.user.cache.data.dto.UserInfo;
-import com.codermi.blog.user.data.UserOpenInfo;
-import com.codermi.blog.user.data.po.User;
-import com.codermi.blog.user.data.request.RegisterRequest;
 
 /**
  * @author qiudm
