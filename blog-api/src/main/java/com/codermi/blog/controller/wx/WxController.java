@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -59,10 +61,28 @@ public class WxController extends AbstractWxController {
     @PostMapping("/open/handle")
     public void handlePostWx(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOGGER.info("post handle wx message and event");
-        LOGGER.info("request:{}", request);
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        response.setCharacterEncoding("UTF-8");
 
-        wxPubService.handlerMsgEvent(request, response);
+        PrintWriter out = null;
+        try {
+            String responseMsg = wxPubService.handlerMsgEvent(request);
+            out = response.getWriter();
+            out.print(responseMsg);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+
     }
+
 
 
 

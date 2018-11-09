@@ -17,7 +17,8 @@ public class WxEnums {
         video,      //视频
         shortvideo, //小视频
         location,   //地理位置
-        link;       //链接消息
+        link,       //链接消息
+        event;      //事件类型
     }
 
     /**
@@ -79,5 +80,59 @@ public class WxEnums {
          */
         view_limited;
     }
+
+    /**
+     * 事件类型
+     * https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140454
+     */
+    public enum EventType {
+
+        /**
+         * 订阅/取消订阅
+         * 1）关注/取消关注事件
+         * 2）扫描带参数二维码事件
+         */
+        subscribe,      //订阅
+
+        unsubscribe,    //取消订阅
+
+        SCAN,           //用户已关注时的事件推送
+
+        LOCATION,       //上报地理位置
+
+        CLICK,          //自定义菜单事件
+
+        VIEW;           //点击菜单跳转链接时的事件推送
+
+    }
+
+    /**
+     * 微信语言
+     */
+    public enum wxLang {
+
+        zh_CN,  // 简体，
+        zh_TW,  // 繁体，
+        en;     // 英语
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

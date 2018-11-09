@@ -25,6 +25,25 @@ public interface URLConstants {
     String CREATE_WX_MENU =  "https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}";
 
 
+    /**
+     * 获取微信创建的菜单
+     * http请求方式：GET
+     */
+    String GET_WX_MENU = "https://api.weixin.qq.com/cgi-bin/menu/get?access_token={0}";
+
+    /**
+     * 删除微信创建的菜单
+     * GET
+     */
+    String DEL_WX_MENU = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
+
+
+    /**
+     * 获取用户信息
+     * GET
+     */
+    String GET_WX_USER_INFO = "https://api.weixin.qq.com/cgi-bin/user/info?access_token={0}&openid={1}&lang={2}";
+
 
 
 }

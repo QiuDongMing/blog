@@ -2,6 +2,8 @@ package com.codermi.blog.support.wx.data;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author qiudm
  * @date 2018/11/9 13:45
@@ -14,7 +16,7 @@ public class Button {
      *  二级菜单数组，个数应为1~5个
      * 	否
      */
-    private String sub_button;
+    private List<Button> sub_button;
 
 
     /**

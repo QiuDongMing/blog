@@ -1,9 +1,10 @@
 package com.codermi.blog.support.wx.service;
 
 import com.codermi.blog.support.wx.data.WxButton;
+import com.codermi.blog.support.wx.data.WxMenu;
+import com.codermi.blog.support.wx.data.WxUserInfo;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author qiudm
@@ -21,7 +22,7 @@ public interface IWxPubService {
     /**
      * 处理公众号微信发布者发送的消息和事件
      */
-    void handlerMsgEvent(HttpServletRequest request, HttpServletResponse response);
+    String handlerMsgEvent(HttpServletRequest request);
 
     /**
      * 新增自定义菜单
@@ -29,6 +30,24 @@ public interface IWxPubService {
      * @param wxButton
      */
     void addMenu(WxButton wxButton);
+
+    /**
+     * 获取微信菜单
+     * @return
+     */
+    WxMenu getMenu();
+
+    /**
+     * 删除自定义菜单
+     */
+    void delMenu();
+
+    /**
+     * 获取用户信息
+     * @param openId
+     * @return
+     */
+    WxUserInfo getUserInfo(String openId);
 
 
 

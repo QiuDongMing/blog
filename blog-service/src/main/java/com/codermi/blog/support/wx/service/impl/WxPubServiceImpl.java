@@ -5,10 +5,9 @@ import com.codermi.blog.common.constants.Constants;
 import com.codermi.blog.common.constants.Constants.CacheKeyPre;
 import com.codermi.blog.common.constants.URLConstants;
 import com.codermi.blog.support.wx.constants.WxConstants;
-import com.codermi.blog.support.wx.data.WxAccessToken;
-import com.codermi.blog.support.wx.data.WxButton;
-import com.codermi.blog.support.wx.data.WxTextMessage;
+import com.codermi.blog.support.wx.data.*;
 import com.codermi.blog.support.wx.data.po.WxMsgReplyConfig;
+import com.codermi.blog.support.wx.enums.WxEnums;
 import com.codermi.blog.support.wx.service.IWxMsgReplyConfigService;
 import com.codermi.blog.support.wx.service.IWxPubService;
 import com.codermi.blog.support.wx.utils.WxUtils;
@@ -73,13 +72,8 @@ public class WxPubServiceImpl implements IWxPubService {
 
 
     @Override
-    public void handlerMsgEvent(HttpServletRequest request, HttpServletResponse response)  {
-        try {
-            request.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        response.setCharacterEncoding("UTF-8");
+    public String handlerMsgEvent(HttpServletRequest request)  {
+
         //解析微信传入的XML
         Map<String, String> wxMsgMap = WxUtils.parseWxXML(request);
 
@@ -98,6 +92,15 @@ public class WxPubServiceImpl implements IWxPubService {
 
         //接收的是文本类型的消息
         if (Objects.equals(msgType, MsgType.text)) {
+            WxMsgReplyConfig wxMsgReplyConfig = wxMsgReplyConfigService.getByReqText(wxMsgMap.get("Content"));
+            if (wxMsgReplyConfig == null) {
+                wxMsgReplyConfig = wxMsgReplyConfigService.getByReqText(WxConstants.DEFAULT_REQ_TEXT);
+            }
+            String rspText = wxMsgReplyConfig == null ? WxConstants.DEFAULT_RSP_TEXT : wxMsgReplyConfig.getRspText();
+            //处理文本消息
+            responseMsg = sendTextMsg(ToUserName, FromUserName, rspText);
+        } else if (Objects.equals(msgType, MsgType.event)) { //事件类型
+
 
             WxMsgReplyConfig wxMsgReplyConfig = wxMsgReplyConfigService.getByReqText(wxMsgMap.get("Content"));
             if (wxMsgReplyConfig == null) {
@@ -107,38 +110,39 @@ public class WxPubServiceImpl implements IWxPubService {
             //处理文本消息
             responseMsg = sendTextMsg(ToUserName, FromUserName, rspText);
         }
-        PrintWriter out = null;
-        try {
-            out = response.getWriter();
-            out.print(responseMsg);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-        }
+
+        return responseMsg;
     }
 
 
     @Override
     public void addMenu(WxButton wxButton) {
+        String response = HttpHelper.postJSON(MessageFormat
+                .format(URLConstants.CREATE_WX_MENU, String.valueOf(getPubAccessToken())), wxButton);
+        LOGGER.info("response:{}", response);
+    }
 
 
+    @Override
+    public WxMenu getMenu() {
+        String response = HttpHelper.get(MessageFormat
+                .format(URLConstants.GET_WX_MENU, String.valueOf(getPubAccessToken())), null);
+        return JSON.parseObject(response, WxMenu.class);
+    }
+
+
+    @Override
+    public void delMenu() {
 
 
     }
 
-
-
-
-
-
-
-
-
-
-
+    @Override
+    public WxUserInfo getUserInfo(String openId) {
+        String response = HttpHelper.get(MessageFormat
+                .format(URLConstants.GET_WX_USER_INFO, getPubAccessToken(), openId, WxEnums.wxLang.zh_CN.name()), null);
+        return JSON.parseObject(response, WxUserInfo.class);
+    }
 
     /**
      * 发送文本消息内容
