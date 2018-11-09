@@ -27,8 +27,8 @@ public class Constants {
         String TOKEN_USER_LOGIN = "token_user_login";
         String USERID_TOKEN = "userId_token";
         String USER_INFO = "user";
+        String WX_PUB_ACCESS_TOKEN = "wx_pub_access_token";
     }
-
 
 
 

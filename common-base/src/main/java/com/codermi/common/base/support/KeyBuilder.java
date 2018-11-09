@@ -1,4 +1,4 @@
-package com.codermi.blog.user.utils;
+package com.codermi.common.base.support;
 
 /**
  * @author qiudm

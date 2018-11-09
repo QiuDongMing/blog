@@ -22,14 +22,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-amqp</artifactId>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.codermi</groupId>
             <artifactId>elastic-job</artifactId>
+            <scope>test</scope>
             <version>1.0</version>
             <exclusions>
                 <exclusion>

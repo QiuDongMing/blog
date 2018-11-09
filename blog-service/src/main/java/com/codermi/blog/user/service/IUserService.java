@@ -23,5 +23,5 @@ public interface IUserService {
     void cacheUserInfo(UserInfo userInfo);
 
 
-
+    void test();
 }

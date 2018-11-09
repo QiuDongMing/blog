@@ -49,11 +49,18 @@ public class UserController {
         System.out.println("applicationContext.getId() = " + applicationContext.getId());
         UserServiceImpl bean = applicationContext.getBean(UserServiceImpl.class);
 
+
         return JsonResult.SUCCESS("测试");
     }
 
     @RequestMapping("/open/test")
     public JsonResult open() {
+//        try {
+           // Thread.sleep(3000L);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        userService.test();
         return JsonResult.SUCCESS("测试open");
     }
 

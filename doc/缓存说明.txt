@@ -14,4 +14,9 @@ Redis缓存：
        键值：user:userId
        值：com.codermi.blog.user.cache.data.dto.UserInfo
        备注：无过期时间
+    4、微信统一认证token：
+           保存类型：string
+           键值：
+           值：
+           备注：有过期时间
 

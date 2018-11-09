@@ -3,7 +3,6 @@ import com.alibaba.fastjson.JSON;
 import com.codermi.blog.common.constants.Constants;
 import com.codermi.blog.common.service.IIdIndexService;
 import com.codermi.blog.exception.ServiceException;
-import com.codermi.blog.user.cache.AccessTokenCache;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.dao.IUserDao;
@@ -13,9 +12,10 @@ import com.codermi.blog.user.enums.UserEnum;
 import com.codermi.blog.user.service.ISecurityService;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.utils.AccessTokenCacheUtil;
-import com.codermi.blog.user.utils.KeyBuilder;
+
 import com.codermi.blog.user.utils.UserCacheUtil;
 import com.codermi.common.base.enums.ErrorCode;
+import com.codermi.common.base.support.KeyBuilder;
 import com.codermi.common.base.utils.*;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +62,7 @@ public class SecurityServiceImpl implements ISecurityService {
         try {
             this.validateDbUser(user);
             if (Objects
-                    .equals(MD5Util.md5Hex(password, Constants.PASSWORD_SALT), user.getPassword())) {
+                    .equals(EncryUtils.md5Hex(password, Constants.PASSWORD_SALT), user.getPassword())) {
                 UserInfo userInfo = createUserInfo(user);
                 userCacheUtil.put(user.getUserId(), userInfo);
                 AccessToken accessToken = setAccessToken(user);
@@ -106,7 +105,7 @@ public class SecurityServiceImpl implements ISecurityService {
             User user = new User();
             user.setNickName(nickName);
             user.setUserType(UserEnum.UserType.USER.getType());
-            user.setPassword(MD5Util.md5Hex(registerRequest.getPassword(), Constants.PASSWORD_SALT));
+            user.setPassword(EncryUtils.md5Hex(registerRequest.getPassword(), Constants.PASSWORD_SALT));
             user = initUser(user);
             userDao.saveUser(user);
         } catch (Exception e) {

@@ -7,8 +7,10 @@ import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.dao.IUserDao;
 import com.codermi.blog.user.data.po.User;
 import com.codermi.blog.user.service.IUserService;
-import com.codermi.blog.user.utils.KeyBuilder;
+
+
 import com.codermi.blog.user.utils.UserCacheUtil;
+import com.codermi.common.base.support.KeyBuilder;
 import com.codermi.common.base.utils.BeanUtil;
 import com.codermi.common.base.utils.MapUtil;
 import com.codermi.common.base.utils.StringUtils;
@@ -79,6 +81,17 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+    @Override
+    public void test() {
+        for(int i=0; i <0; i++) {
+            try {
+                LOGGER.info("当前{}",i);
+                Thread.sleep(200L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private User getUserByOpenId(String openId) {
         if (Objects.isNull(openId)) {
