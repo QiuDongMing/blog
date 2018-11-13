@@ -11,10 +11,9 @@ public interface IUserDao {
 
     void saveUser(User user);
 
-    User getByNickName(String nickName);
+    User getByUserNameAndType(String username, Integer userType);
 
     User getByOpenId(String openId);
 
     User getByUserId(String userId);
-
 }

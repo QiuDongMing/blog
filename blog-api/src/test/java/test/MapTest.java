@@ -62,11 +62,11 @@ public class MapTest extends BaseTest {
     @Test
     public void beanToMapTest() {
         UserInfo userInfo = new UserInfo();
-        userInfo.setRoles(Lists.newArrayList("ROLE1","ROLE2","ROLE3"));
+      //  userInfo.setRoles(Lists.newArrayList("ROLE1","ROLE2","ROLE3"));
         userInfo.setEmail("qdm213@qq.com");
         userInfo.setBirthday(System.currentTimeMillis());
         userInfo.setHeadPic("headPic");
-        userInfo.setNickName("nickName");
+       // userInfo.setNickName("nickName");
         userInfo.setUserId("1001");
         Map<String, Object> map = Maps.newHashMap();
         try {

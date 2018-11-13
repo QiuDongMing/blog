@@ -13,7 +13,15 @@ public class UserBaseInfo {
 
     private String userId;
 
-    private String nickName;
+    /**
+     * 账号
+     */
+    private String username;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
 
     /**
      * 0-女 1-男 default-1
@@ -21,7 +29,5 @@ public class UserBaseInfo {
     private Byte sex = 1;
 
     private String headPic;
-
-
 
 }

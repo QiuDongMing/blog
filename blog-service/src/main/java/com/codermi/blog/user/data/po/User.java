@@ -15,11 +15,25 @@ import java.util.List;
 @Data
 public class User {
 
+    /**
+     * 用户的账户id
+     */
+    private String accountId;
+
     private String openId;
 
     private String userId;
 
-    private String nickName;
+    /**
+     * 用户名-唯一标识
+     */
+    private String username;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
+
 
     private String email;
 
@@ -30,13 +44,13 @@ public class User {
 
     private String headPic;
 
-    private String password;
+    //private String password;
 
     private Long birthday;
 
     private Long createTime;
 
-    private List<String> roles;
+    private List<String> roleIds;
 
     /**
      * 用户状态

@@ -1,11 +1,10 @@
 package com.codermi.blog.controller.user;
 
+import com.codermi.blog.auth.service.ISecurityService;
 import com.codermi.blog.mylearnpackage.spring.application.ApplicationContextAwareImplements;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.data.request.LoginRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
-import com.codermi.blog.user.data.request.group.AddGroup;
-import com.codermi.blog.user.service.ISecurityService;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.service.impl.UserServiceImpl;
 import com.codermi.common.base.utils.JsonResult;
@@ -75,7 +74,7 @@ public class UserController {
     @ApiOperation(value = "用户登录", httpMethod = "POST", response = AccessToken.class)
     @PostMapping("/login")
     public JsonResult login(@RequestBody @Validated LoginRequest param) {
-        AccessToken accessToken = securityService.loginByNickNamePassword(param.getNickName(), param.getPassword());
+        AccessToken accessToken = securityService.loginByUserNamePassword(param.getUsername(), param.getPassword(), param.getUserType());
         Map<String, Object> map = Maps.newHashMap();
         map.put("accessToken", accessToken);
         return JsonResult.SUCCESS(map);

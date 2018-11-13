@@ -1,6 +1,7 @@
 package com.codermi.blog.user.data.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -13,8 +14,9 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class RegisterRequest {
 
-    @ApiModelProperty("昵称")
-    private String nickName;
+    @ApiModelProperty("账号")
+    @NotBlank(message = "账号不能为空")
+    private String username;
 
     @ApiModelProperty("密码")
     @NotBlank(message = "密码不能为空")

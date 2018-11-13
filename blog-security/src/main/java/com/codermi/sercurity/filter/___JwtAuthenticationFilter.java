@@ -13,7 +13,7 @@ import java.io.IOException;
  * @date 2018/7/26 22:35
  * @desc
  */
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class ___JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

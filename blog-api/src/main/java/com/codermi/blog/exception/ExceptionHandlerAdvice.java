@@ -42,8 +42,7 @@ public class ExceptionHandlerAdvice {
                     .append("&");
         }
         logger.error("接口参数: {}", sb.toString());
-        logger.error("错误内容：{}", e.getMessage());
-        e.printStackTrace();
+        logger.error("错误内容：{},error detail:", e.getMessage(), e);
 
         int resultCode = ErrorCode.ERROR.getErrorCode();
         String resultMsg = "服务器繁忙，请稍后再试！";
@@ -58,7 +57,7 @@ public class ExceptionHandlerAdvice {
                 List<ObjectError> allErrors = ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors();
                 resultMsg = allErrors.get(0).getDefaultMessage();
             } else if(e instanceof AccessDeniedException) {
-                resultCode = ErrorCode.FORBIDEN_ACCESS.getErrorCode();
+                resultCode = ErrorCode.FORBIDDEN_ACCESS.getErrorCode();
                 resultMsg = e.getMessage();
             } else if (e instanceof ServiceException) {
                 ServiceException ex = ((ServiceException) e);

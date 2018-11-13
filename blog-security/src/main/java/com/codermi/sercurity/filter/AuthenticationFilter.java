@@ -1,9 +1,10 @@
 package com.codermi.sercurity.filter;
 
+import com.codermi.blog.auth.service.ISecurityService;
 import com.codermi.blog.exception.ServiceException;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
-import com.codermi.blog.user.service.ISecurityService;
+import com.codermi.blog.user.data.po.Permission;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.common.base.enums.ErrorCode;
 import com.codermi.sercurity.Constants.NoFilterUrl;
@@ -26,7 +27,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,15 +60,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                     AccessToken accessToken = validateAccessToken(token, response);
                     UserInfo userInfo = userService.getUserInfo(accessToken.getUserId());
                     if (Objects.nonNull(userInfo)) {
-                        //最关键的部分就是这里, 我们直接注入了Role信息
+                        //最关键的部分就是这里, 我们直接注入了Role的权限信息
                         List<SimpleGrantedAuthority> authorities = Lists.newArrayList();
-                        List<String> roles = userInfo.getRoles();
-                        if (!CollectionUtils.isEmpty(roles)) {
-                            roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
+                        List<String> perms = userInfo.getPerms();
+                        if (!CollectionUtils.isEmpty(perms)) {
+                            perms.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
                         }
-                        SecurityContextHolder.getContext().setAuthentication(
-                                new UsernamePasswordAuthenticationToken(
-                                        null, null, authorities));
+                        UsernamePasswordAuthenticationToken authenticationToken = new
+                                UsernamePasswordAuthenticationToken(null, null, authorities);
+
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                         //保存认证信息到requestHeader
                         myHttpServletRequestWrapper.putHeader("userID", userInfo.getUserId());
                     } else {

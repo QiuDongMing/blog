@@ -3,7 +3,6 @@ package com.codermi.blog.user.cache.data.dto;
 import com.codermi.blog.user.enums.UserEnum;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,9 +15,19 @@ public class UserInfo {
 
     private String openId;
 
+    /**
+     * 用户id
+     */
     private String userId;
 
-    private String nickName;
+    /**
+     * 用户账号
+     */
+    private String username;
+    /**
+     * 昵称
+     */
+    private String nickname;
 
     private String email;
 
@@ -33,7 +42,12 @@ public class UserInfo {
 
     private Long createTime;
 
-    private List<String> roles;
+    private List<String> roleIds;
+
+    /**
+     * 保存权限列表
+     */
+    private List<String> perms;
 
     /**
      * 用户状态

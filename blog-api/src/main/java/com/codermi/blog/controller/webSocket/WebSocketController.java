@@ -31,7 +31,7 @@ public class WebSocketController {
         System.out.println("message:" + (message));
         for (int i = 0; i < 100000; i++) {
             User user = new User();
-            user.setNickName("张三" + i);
+
             user.setCreateTime(System.currentTimeMillis());
             user.setUserId("1001");
             user.setBirthday(System.currentTimeMillis());

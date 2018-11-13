@@ -25,8 +25,8 @@ public class UserDaoImpl implements IUserDao {
     }
 
     @Override
-    public User getByNickName(String nickName) {
-        Query query = Query.query(Criteria.where("nickName").is(nickName));
+    public User getByUserNameAndType(String username, Integer userType) {
+        Query query = Query.query(Criteria.where("username").is(username).and("userType").is(userType));
         return mongoTemplate.findOne(query, User.class);
     }
 
