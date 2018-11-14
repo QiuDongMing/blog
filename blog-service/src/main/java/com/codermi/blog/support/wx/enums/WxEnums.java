@@ -109,7 +109,7 @@ public class WxEnums {
     /**
      * 微信语言
      */
-    public enum wxLang {
+    public enum WxLang {
 
         zh_CN,  // 简体，
         zh_TW,  // 繁体，

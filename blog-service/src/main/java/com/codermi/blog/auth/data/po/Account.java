@@ -2,7 +2,7 @@ package com.codermi.blog.auth.data.po;
 
 import com.codermi.blog.common.data.po.BaseInfo;
 import com.codermi.blog.auth.enums.AccountEnum.*;
-import com.codermi.blog.user.enums.UserEnum;
+import com.codermi.blog.user.enums.UserEnums;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -37,7 +37,7 @@ public class Account extends BaseInfo {
 
     /**
      * 系统用户、普通用户
-     * @see UserEnum.UserType
+     * @see UserEnums.UserType
      */
     private Integer userType;
 

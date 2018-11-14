@@ -1,9 +1,10 @@
 package com.codermi.blog.user.cache.data.dto;
 
-import com.codermi.blog.user.enums.UserEnum;
+import com.codermi.blog.user.enums.UserEnums;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author qiudm
@@ -47,17 +48,17 @@ public class UserInfo {
     /**
      * 保存权限列表
      */
-    private List<String> perms;
+    private Set<String> perms;
 
     /**
      * 用户状态
-     * @see UserEnum.UserStatus
+     * @see UserEnums.UserStatus
      */
     private Integer status = 1;
 
     /**
      * 用户类型
-     * @see UserEnum.UserType
+     * @see UserEnums.UserType
      */
     private Integer userType;
 }

@@ -54,13 +54,13 @@ public class User {
 
     /**
      * 用户状态
-     * @see UserEnum.UserStatus
+     * @see UserEnums.UserStatus
      */
     private Integer status = 1;
 
     /**
      * 用户类型
-     * @see UserEnum.UserType
+     * @see UserEnums.UserType
      */
     private Integer userType;
 

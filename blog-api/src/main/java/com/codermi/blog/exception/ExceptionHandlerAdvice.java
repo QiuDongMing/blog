@@ -31,7 +31,14 @@ public class ExceptionHandlerAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
-    @ExceptionHandler(value = {Exception.class, RuntimeException.class})
+   @ExceptionHandler(value = {Exception.class, RuntimeException.class})
+
+//    @ExceptionHandler( value = {
+//            MissingServletRequestParameterException.class,
+//            BindException.class,
+//            MethodArgumentNotValidException.class,
+//            ConstraintViolationException.class
+//    })
     public void handleErrors(HttpServletRequest request, HttpServletResponse response, Exception e)
             throws Exception {
         logger.error("接口请求错误：{}", request.getRequestURI());
@@ -56,10 +63,12 @@ public class ExceptionHandlerAdvice {
                 resultCode = ErrorCode.MISS_PARAM.getErrorCode();
                 List<ObjectError> allErrors = ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors();
                 resultMsg = allErrors.get(0).getDefaultMessage();
-            } else if(e instanceof AccessDeniedException) {
+            }
+            else if(e instanceof AccessDeniedException) {
                 resultCode = ErrorCode.FORBIDDEN_ACCESS.getErrorCode();
-                resultMsg = e.getMessage();
-            } else if (e instanceof ServiceException) {
+                resultMsg = ErrorCode.FORBIDDEN_ACCESS.getErrMsg();
+            }
+            else if (e instanceof ServiceException) {
                 ServiceException ex = ((ServiceException) e);
                 resultCode = null == ex.getResultCode() ? 0 : ex.getResultCode();
                 resultMsg = ex.getMessage();

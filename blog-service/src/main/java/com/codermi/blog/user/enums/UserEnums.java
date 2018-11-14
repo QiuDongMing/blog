@@ -5,7 +5,7 @@ package com.codermi.blog.user.enums;
  * @date 2018/9/6 15:08
  * @desc
  */
-public class UserEnum {
+public class UserEnums {
 
 
     public enum UserRole {

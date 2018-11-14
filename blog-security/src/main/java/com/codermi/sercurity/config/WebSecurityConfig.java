@@ -1,12 +1,11 @@
 package com.codermi.sercurity.config;
 
 import com.codermi.sercurity.filter.AuthenticationFilter;
-import com.codermi.sercurity.filter.CustomAccessDeniedHandler;
-import com.codermi.sercurity.filter.CustomHttp403ForbiddenEntryPoint;
+import com.codermi.sercurity.filter.MyAccessDeniedHandler;
+import com.codermi.sercurity.filter.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +25,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFilter authenticationFilter;
 
+
+    @Autowired
+    private MyAccessDeniedHandler myAccessDeniedHandler;
+
+    @Autowired
+    private MyAuthenticationEntryPoint myAuthenticationEntryPoint;
 
     private static final String[] AUTH_WHITE_LIST = {
             // -- swagger ui
@@ -75,16 +80,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-
-        httpSecurity.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler()).and()
-                .exceptionHandling().authenticationEntryPoint(new CustomHttp403ForbiddenEntryPoint());
+//
+//        httpSecurity.exceptionHandling().authenticationEntryPoint(myAuthenticationEntryPoint)
+//                .accessDeniedHandler(myAccessDeniedHandler);
 
     }
-
-
-
-
 
 
 

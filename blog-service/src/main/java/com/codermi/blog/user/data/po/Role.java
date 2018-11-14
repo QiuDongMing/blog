@@ -15,8 +15,20 @@ import java.util.List;
 @Data
 public class Role extends BaseInfo {
 
-
+    /**
+     * 角色名称
+     */
     private String roleName;
+
+    /**
+     * 创建者
+     */
+    private String creator;
+
+    /**
+     * 角色描述
+     */
+    private String desc;
 
     /**
      * 权限列表

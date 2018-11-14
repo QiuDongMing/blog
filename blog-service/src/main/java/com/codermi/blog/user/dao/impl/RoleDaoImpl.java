@@ -27,6 +27,20 @@ public class RoleDaoImpl implements IRoleDao {
         return mongoTemplate.find(query, Role.class);
     }
 
+    @Override
+    public void insertRole(Role role) {
+        mongoTemplate.insert(role);
+    }
+
+    @Override
+    public Role getByName(String roleName) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("roleName").is(roleName)), Role.class);
+    }
+
+
+
+
+
 
 
 

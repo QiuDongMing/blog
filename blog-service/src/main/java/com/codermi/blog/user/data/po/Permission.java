@@ -2,7 +2,10 @@ package com.codermi.blog.user.data.po;
 
 import com.codermi.blog.common.data.po.BaseInfo;
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 /**
  * @author qiudm
@@ -19,17 +22,27 @@ public class Permission extends BaseInfo {
     private String pid;
 
     /**
-     * web端定义的路径
+     * web端定义菜单url
      */
     private String webUrl;
 
     /**
-     * 权限列表 eg：user:add
+     * 权限名称
+     */
+    private String name;
+
+    /**
+     * 图标
+     */
+    private String icon;
+
+    /**
+     * 授权标识 eg：user:add
      */
     private String perms;
 
     /**
-     * 0-目录 1-菜单 2-按钮
+     * 1-目录 2-菜单 3-按钮
      */
     private Integer type;
 
@@ -37,5 +50,8 @@ public class Permission extends BaseInfo {
      * 排序
      */
     private Long sort;
+
+    @Transient
+    private List<Permission> child;
 
 }

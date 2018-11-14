@@ -11,6 +11,7 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
  * @date 2018/9/10 15:06
  * @desc
  */
+@Deprecated
 public class AccessManagerCacheFactory extends CacheFactory {
 
     private static final String ACCESS_TOKEN_CACHE = "accessToken";
@@ -19,15 +20,19 @@ public class AccessManagerCacheFactory extends CacheFactory {
      */
     private static final long HEAP_ENTRIES = 1000;
 
+    private static final Byte[] LOCKS = new Byte[0];
+
+    private volatile static Cache<String, AccessToken> accessTokenCache = null;
+
     public AccessManagerCacheFactory() {
 
     }
 
     public static final Cache getAccessTokenCache() {
-        Cache<String, AccessToken> accessTokenCache = getCacheManager()
-                .getCache(ACCESS_TOKEN_CACHE, String.class, AccessToken.class);
         if (accessTokenCache == null) {
-            synchronized (ACCESS_TOKEN_CACHE) {
+            accessTokenCache = getCacheManager()
+                    .getCache(ACCESS_TOKEN_CACHE, String.class, AccessToken.class);
+            synchronized (LOCKS) {
                 if (accessTokenCache == null) {
                     accessTokenCache = getCacheManager().createCache(ACCESS_TOKEN_CACHE, CacheConfigurationBuilder
                             .newCacheConfigurationBuilder(String.class, AccessToken.class,

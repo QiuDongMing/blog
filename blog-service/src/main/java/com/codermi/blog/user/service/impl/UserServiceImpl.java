@@ -6,6 +6,7 @@ import com.codermi.blog.exception.ServiceException;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.dao.IUserDao;
 import com.codermi.blog.user.data.po.User;
+import com.codermi.blog.user.enums.UserEnums.*;
 import com.codermi.blog.user.service.IUserService;
 
 
@@ -14,12 +15,15 @@ import com.codermi.common.base.support.KeyBuilder;
 import com.codermi.common.base.utils.BeanUtil;
 import com.codermi.common.base.utils.MapUtil;
 import com.codermi.common.base.utils.StringUtils;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -106,6 +110,22 @@ public class UserServiceImpl implements IUserService {
         }
         return userDao.getByUserId(userId);
     }
+
+
+    @Override
+    public void updateUserRole(List<String> roleIds, String userId) {
+        if (CollectionUtils.isEmpty(roleIds)) return;
+        User user = getUserByUserId(userId);
+        Integer userType = user.getUserType();
+        if (!Objects.equals(userType, UserType.ADMIN.getType())) {
+            throw new ServiceException("该用户类型不支持更新角色");
+        }
+
+        Map<String, Object> maps = Maps.newHashMap();
+        maps.put("roleIds", roleIds);
+        userDao.updateUser(userId, maps);
+    }
+
 
 
 }

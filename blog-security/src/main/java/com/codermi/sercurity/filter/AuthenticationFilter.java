@@ -4,7 +4,6 @@ import com.codermi.blog.auth.service.ISecurityService;
 import com.codermi.blog.exception.ServiceException;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
-import com.codermi.blog.user.data.po.Permission;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.common.base.enums.ErrorCode;
 import com.codermi.sercurity.Constants.NoFilterUrl;
@@ -29,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author qiudm
@@ -62,7 +62,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                     if (Objects.nonNull(userInfo)) {
                         //最关键的部分就是这里, 我们直接注入了Role的权限信息
                         List<SimpleGrantedAuthority> authorities = Lists.newArrayList();
-                        List<String> perms = userInfo.getPerms();
+                        Set<String> perms = userInfo.getPerms();
                         if (!CollectionUtils.isEmpty(perms)) {
                             perms.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
                         }
@@ -78,27 +78,27 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (ServiceException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
                 try {
                     HttpUtils.responseError(response, e.getResultCode(), e.getMessage());
                     return;
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    LOGGER.error(e1.getMessage(), e1);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
                 try {
                     HttpUtils.responseError(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
                     return;
                 } catch (Exception e1) {
-                    e1.printStackTrace();
-                    throw new ServiceException(e1.getMessage());
+                    LOGGER.error(e1.getMessage(), e1);
                 }
             }
 
         }
 
         filterChain.doFilter(myHttpServletRequestWrapper, response);
+
     }
 
     private AccessToken validateAccessToken(String token, HttpServletResponse response) {

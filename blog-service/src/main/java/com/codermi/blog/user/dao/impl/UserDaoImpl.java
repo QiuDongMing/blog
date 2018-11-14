@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @author qiudm
@@ -40,5 +43,18 @@ public class UserDaoImpl implements IUserDao {
     public User getByUserId(String userId) {
         Query query = Query.query(Criteria.where("userId").is(userId));
         return mongoTemplate.findOne(query, User.class);
+    }
+
+
+    @Override
+    public void updateUser(String userId, Map<String, Object> updates) {
+        Query query = Query.query(Criteria.where("userId").is(userId));
+        Update update = new Update();
+        for (Map.Entry<String, Object> entry : updates.entrySet()) {
+            if (entry.getValue() != null) {
+                update.set(entry.getKey(), entry.getValue());
+            }
+        }
+        mongoTemplate.updateFirst(query, update, User.class);
     }
 }

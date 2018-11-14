@@ -1,8 +1,5 @@
 package com.codermi.blog.user.config;
 
-import com.codermi.blog.user.service.impl.MyConfigService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,24 +9,24 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ConfigTest {
-
-    @Bean
-    @ConditionalOnMissingBean(MyConfigService.class)
-    public MyConfigService myConfigService1() {
-        MyConfigService configService = new MyConfigService();
-        configService.setId(0);
-        configService.setName("0000");
-        return configService;
-    }
-
-    @Bean(name = "sdsa")
-    @ConditionalOnMissingBean(MyConfigService.class)
-    public MyConfigService myConfigService2() {
-        MyConfigService configService = new MyConfigService();
-        configService.setId(2);
-        configService.setName("2222");
-        return configService;
-    }
+//
+//    @Bean
+//    @ConditionalOnMissingBean(MyConfigService.class)
+//    public MyConfigService myConfigService1() {
+//        MyConfigService configService = new MyConfigService();
+//        configService.setId(0);
+//        configService.setName("0000");
+//        return configService;
+//    }
+//
+//    @Bean(name = "sdsa")
+//    @ConditionalOnMissingBean(MyConfigService.class)
+//    public MyConfigService myConfigService2() {
+//        MyConfigService configService = new MyConfigService();
+//        configService.setId(2);
+//        configService.setName("2222");
+//        return configService;
+//    }
 
 
 }

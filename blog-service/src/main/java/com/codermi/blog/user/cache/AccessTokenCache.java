@@ -9,6 +9,7 @@ import org.ehcache.Cache;
  * @date 2018/9/11 11:06
  * @desc
  */
+@Deprecated
 public class AccessTokenCache <T extends AccessToken> {
 
     private Cache cache = null;

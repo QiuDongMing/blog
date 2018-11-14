@@ -14,5 +14,9 @@ public interface IRoleDao {
 
     List<Role> getByIds(List<ObjectId> objectIds);
 
+    void insertRole(Role role);
+
+    Role getByName(String roleName);
+
 
 }

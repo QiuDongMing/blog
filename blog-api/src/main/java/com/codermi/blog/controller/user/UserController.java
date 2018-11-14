@@ -3,6 +3,7 @@ package com.codermi.blog.controller.user;
 import com.codermi.blog.auth.service.ISecurityService;
 import com.codermi.blog.mylearnpackage.spring.application.ApplicationContextAwareImplements;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
+import com.codermi.blog.user.data.request.AdminRequest;
 import com.codermi.blog.user.data.request.LoginRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
 import com.codermi.blog.user.service.IUserService;
@@ -13,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,6 +56,9 @@ public class UserController {
 
     @RequestMapping("/open/test")
     public JsonResult open() {
+
+        int a = 1 /0 ;
+
 //        try {
            // Thread.sleep(3000L);
 //        } catch (InterruptedException e) {
@@ -81,15 +86,14 @@ public class UserController {
     }
 
 
+    @ApiOperation(value = "新增管理员用户", httpMethod = "POST")
+    @PostMapping("/add")
+    @PreAuthorize("hasAuthority('user:add')")
+    public JsonResult addAdmin(@RequestBody @Validated AdminRequest param) {
+        System.out.println(" 有权限 " );
 
-
-
-
-
-
-
-
-
+        return JsonResult.SUCCESS();
+    }
 
 
 }

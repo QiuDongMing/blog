@@ -1,13 +1,15 @@
 package com.codermi.blog.support.wx.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.codermi.blog.common.constants.Constants;
 import com.codermi.blog.common.constants.Constants.CacheKeyPre;
 import com.codermi.blog.common.constants.URLConstants;
 import com.codermi.blog.support.wx.constants.WxConstants;
-import com.codermi.blog.support.wx.data.*;
+import com.codermi.blog.support.wx.data.WxAccessToken;
+import com.codermi.blog.support.wx.data.WxButton;
+import com.codermi.blog.support.wx.data.WxMenu;
+import com.codermi.blog.support.wx.data.WxUserInfo;
 import com.codermi.blog.support.wx.data.po.WxMsgReplyConfig;
-import com.codermi.blog.support.wx.enums.WxEnums;
+import com.codermi.blog.support.wx.enums.WxEnums.*;
 import com.codermi.blog.support.wx.service.IWxMsgReplyConfigService;
 import com.codermi.blog.support.wx.service.IWxPubService;
 import com.codermi.blog.support.wx.utils.WxUtils;
@@ -18,13 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import com.codermi.blog.support.wx.enums.WxEnums.MsgType;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Objects;
@@ -140,7 +137,7 @@ public class WxPubServiceImpl implements IWxPubService {
     @Override
     public WxUserInfo getUserInfo(String openId) {
         String response = HttpHelper.get(MessageFormat
-                .format(URLConstants.GET_WX_USER_INFO, getPubAccessToken(), openId, WxEnums.wxLang.zh_CN.name()), null);
+                .format(URLConstants.GET_WX_USER_INFO, getPubAccessToken(), openId, WxLang.zh_CN.name()), null);
         return JSON.parseObject(response, WxUserInfo.class);
     }
 

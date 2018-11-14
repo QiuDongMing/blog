@@ -21,14 +21,18 @@ public class UserCacheFactory extends CacheFactory {
      */
     private static final long HEAP_ENTRIES = 1000;
 
+    private static final Byte[] LOCKS = new Byte[0];
+
+    private volatile static Cache<String, UserInfo> userCache = null;
+
     public UserCacheFactory() {
 
     }
 
     public static final Cache getUserCache() {
-        Cache<String, UserInfo> userCache = getCacheManager().getCache(USER_CACHE, String.class, UserInfo.class);
         if (userCache == null) {
-            synchronized (USER_CACHE) {
+            userCache = getCacheManager().getCache(USER_CACHE, String.class, UserInfo.class);
+            synchronized (LOCKS) {
                 if (userCache == null) {
                     userCache = getCacheManager().createCache(USER_CACHE, CacheConfigurationBuilder
                             .newCacheConfigurationBuilder(String.class, UserInfo.class,

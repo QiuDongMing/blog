@@ -18,7 +18,7 @@ public class AccessToken {
     private String openId;
 
     /**
-     * @see UserEnum.UserType
+     * @see UserEnums.UserType
      */
     private Integer userType;
 
