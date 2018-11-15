@@ -39,7 +39,7 @@ public class Permission extends BaseInfo {
     /**
      * 授权标识 eg：user:add
      */
-    private String perms;
+    private String perm;
 
     /**
      * 1-目录 2-菜单 3-按钮

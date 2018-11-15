@@ -1,0 +1,101 @@
+use blog;
+//初始化权限
+db.t_permission.insert([
+    {
+        "_id":ObjectId("5bebda1420e82a4260fca99c"),
+        "name":"一级菜单",
+        "icon":"",
+        "type":NumberInt(1),
+        "sort":NumberLong(0),
+        "createTime":NumberLong(1542192521520)
+    },
+    {
+        "_id":ObjectId("5bebfd897937980320ea2c56"),
+        "pid":"5bebda1420e82a4260fca99c",
+        "webUrl":"",
+        "name":"系统配置",
+        "icon":"",
+        "type":NumberInt(1),
+        "sort":NumberLong(0),
+        "createTime":NumberLong(1542192521520)
+    },
+    {
+        "_id":ObjectId("5bebfd897937980320ea2c58"),
+        "pid":"5bebfd897937980320ea2c56",
+        "webUrl":"",
+        "name":"权限管理",
+        "icon":"",
+        "type":NumberInt(2),
+        "sort":NumberLong(0),
+        "createTime":NumberLong(1542192521520)
+    },
+    {
+        "_id":ObjectId("5bebfd897937980320ea2c59"),
+        "pid":"5bebfd897937980320ea2c58",
+        "name":"新增权限",
+        "icon":"",
+        "perm":"perm:add",
+        "type":NumberInt(3),
+        "sort":NumberLong(0),
+        "createTime":NumberLong(1542192521520)
+    },
+    {
+        "_id":ObjectId("5bebfd897937980320ea2c61"),
+        "pid":"5bebfd897937980320ea2c56",
+        "webUrl":"",
+        "name":"角色管理",
+        "icon":"",
+        "type":NumberInt(2),
+        "sort":NumberLong(0),
+        "createTime":NumberLong(1542192521520)
+    },
+    {
+        "_id":ObjectId("5bebfd897937980320ea2c62"),
+        "pid":"5bebfd897937980320ea2c61",
+        "name":"新增角色",
+        "icon":"",
+        "perm":"role:add",
+        "type":NumberInt(3),
+        "sort":NumberLong(0),
+        "createTime":NumberLong(1542192521520)
+    }
+]);
+
+
+//初始化角色
+db.t_role.insert({
+    "_id":ObjectId("5bebda1420e82a4260fca88b"),
+    "roleName":"超级管理员",
+    "creator":"10000",
+    "desc":"超级管理员",
+    "permissionIds":[
+        "5bebda1420e82a4260fca99c",
+        "5bebfd897937980320ea2c56",
+        "5bebfd897937980320ea2c58",
+        "5bebfd897937980320ea2c59",
+        "5bebfd897937980320ea2c61",
+        "5bebfd897937980320ea2c62"
+    ],
+    "createTime":NumberLong(1542192521520)
+});
+
+//初始化账户
+db.t_auth_account.insert({
+    "userId":"10000",
+    "accountType":"username",
+    "accountNum":"admin",
+    "password":"19d2673f68269ee4d4c5afa62173249e",
+    "accountId":"12d3934ae3e64576be363391d8f5f9d",
+    "userType":0
+});
+//初始化用户
+db.t_user.insert({
+    "userId":"10000",
+    "userType":NumberInt(0),
+    "username":"admin",
+    "nickname":"超级管理员",
+    "accountId":"12d3934ae3e64576be363391d8f5f9d",
+    "status":NumberInt(1),
+    "openId":"12d3934ae3e64576be363391d8f5f9da",
+    "roleIds":["5bebda1420e82a4260fca88b"]
+});

@@ -23,5 +23,14 @@ public interface PermConstants {
      */
     String FIRST_MENU_ICON = "";
 
+    /**
+     * 超级管理员角色的id
+     */
+    String SUPER_ADMIN_ROLE_ID = "5bebda1420e82a4260fca88b";
+
+    /**
+     * 超级管理员用户id
+     */
+    String SUPER_ADMIN_USER_ID = "10000";
 
 }

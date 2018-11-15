@@ -27,7 +27,7 @@ public class PermissionRequest {
     private String name;
 
     @ApiModelProperty(value = "授权标识 eg：user:add")
-    private String perms;
+    private String perm;
 
     @ApiModelProperty(value = "权限类型:1-目录 2-菜单 3-按钮")
     @Range(min = 1, max = 3, message = "权限类型错误")

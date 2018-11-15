@@ -5,6 +5,7 @@ import com.codermi.blog.user.data.request.RoleRequest;
 import com.codermi.blog.user.service.IRoleService;
 import com.codermi.common.base.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ public class RoleController {
     private IRoleService roleService;
 
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('role:add')")
     public JsonResult add(@RequestBody @Validated RoleRequest request) {
         roleService.addRole(request);
         return JsonResult.SUCCESS();

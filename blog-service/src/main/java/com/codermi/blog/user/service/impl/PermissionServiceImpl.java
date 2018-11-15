@@ -10,7 +10,6 @@ import com.codermi.blog.user.service.IPermissionService;
 import com.codermi.common.base.utils.BeanUtil;
 import com.codermi.common.base.utils.StringUtils;
 import com.codermi.common.base.utils.TimeUtils;
-import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +31,10 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     public void addPermission(PermissionRequest request) {
         int type = request.getType();
+        Permission prentPermission = permissionDao.getById(request.getPid());
+        if (Objects.isNull(prentPermission)) {
+            throw new ServiceException("父级菜单不存在");
+        }
 
         Permission permission = BeanUtil.copy(request, Permission.class);
         permission.setUpdateTime(TimeUtils.currentMillis());
@@ -40,7 +43,7 @@ public class PermissionServiceImpl implements IPermissionService {
 
         //目录
         if (Objects.equals(type, PermissionType.DIRECTORY.getType())) {
-            permission.setPerms(null);
+            permission.setPerm(null);
             permission.setWebUrl(null);
             permissionDao.insertPermission(permission);
             return;
@@ -57,6 +60,9 @@ public class PermissionServiceImpl implements IPermissionService {
 
         //按钮
         if (Objects.equals(type, PermissionType.BUTTON.getType())) {
+            if (StringUtils.isBlank(permission.getPerm())) {
+                throw new ServiceException("权限标识不能为空");
+            }
             permission.setWebUrl(null);
             permissionDao.insertPermission(permission);
             return;

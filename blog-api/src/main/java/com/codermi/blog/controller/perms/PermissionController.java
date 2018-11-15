@@ -5,6 +5,7 @@ import com.codermi.blog.user.service.IPermissionService;
 import com.codermi.common.base.utils.JsonResult;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class PermissionController {
     private IPermissionService permissionService;
 
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('perm:add')")
     public JsonResult add(@RequestBody @Validated PermissionRequest request) {
         permissionService.addPermission(request);
         return JsonResult.SUCCESS();
@@ -29,9 +31,12 @@ public class PermissionController {
 
 
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('perm:list')")
     public JsonResult list() {
         return JsonResult.SUCCESS(permissionService.getPermsList());
     }
+
+
 
 
 

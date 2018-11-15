@@ -24,6 +24,7 @@ public class RoleDaoImpl implements IRoleDao {
     @Override
     public List<Role> getByIds(List<ObjectId> objectIds) {
         Query query = Query.query(Criteria.where("_id").in(objectIds));
+
         return mongoTemplate.find(query, Role.class);
     }
 

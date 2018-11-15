@@ -16,16 +16,14 @@ import com.codermi.blog.user.dao.IUserDao;
 import com.codermi.blog.user.data.po.Permission;
 import com.codermi.blog.user.data.po.Role;
 import com.codermi.blog.user.data.po.User;
+import com.codermi.blog.user.data.request.AdminRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
 import com.codermi.blog.user.enums.UserEnums.*;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.utils.UserCacheUtil;
 import com.codermi.common.base.enums.ErrorCode;
 import com.codermi.common.base.support.KeyBuilder;
-import com.codermi.common.base.utils.BeanUtil;
-import com.codermi.common.base.utils.EncryUtils;
-import com.codermi.common.base.utils.StringUtils;
-import com.codermi.common.base.utils.ThreadPoolUtils;
+import com.codermi.common.base.utils.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
@@ -72,36 +70,36 @@ public class SecurityServiceImpl implements ISecurityService {
     @Override
     public AccessToken loginByUserNamePassword(String username, String password, Integer userType) {
         User user = userDao.getByUserNameAndType(username, userType);
-        try {
-            this.validateDbUser(user);
-            Account account = securityDao.getByAccountNumAndUserType(username, userType);
-            if (account == null) {
-                throw new ServiceException(ErrorCode.ACCOUNT_NOT_EXIT);
-            }
-            if (Objects
-                    .equals(EncryUtils.md5Hex(password, Constants.PASSWORD_SALT), account.getPassword())) {
-                UserInfo userInfo = createUserInfo(user);
-                List<Permission> userPermissions = getUserPermissions(user.getUserId());
-                Set<String> perms = Sets.newHashSet();
-                if (CollectionUtils.isNotEmpty(userPermissions)) {
-                    userPermissions.forEach(permission -> {
-                        perms.add(permission.getPerms());
-                    });
-                }
-                userInfo.setPerms(perms);
-                userCacheUtil.put(user.getUserId(), userInfo);
-                AccessToken accessToken = setAccessToken(user);
-                cacheAccessToken(accessToken);
-                ThreadPoolUtils.execute(() -> {
-                    cacheUserIdToken(accessToken.getUserId(), accessToken.getToken());
-                    userService.cacheUserInfo(userInfo);
-                });
-                return accessToken;
-            }
-            throw new ServiceException(ErrorCode.BAD_USERNAME_PASSWORD);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage());
+
+        this.validateDbUser(user);
+        Account account = securityDao.getByAccountNumAndUserType(username, userType);
+        if (account == null) {
+            throw new ServiceException(ErrorCode.ACCOUNT_NOT_EXIT);
         }
+        if (Objects
+                .equals(EncryUtils.md5Hex(password, Constants.PASSWORD_SALT), account.getPassword())) {
+            UserInfo userInfo = createUserInfo(user);
+            List<Permission> userPermissions = getUserPermissions(user.getUserId());
+            Set<String> perms = Sets.newHashSet();
+            if (CollectionUtils.isNotEmpty(userPermissions)) {
+                for (Permission permissions : userPermissions) {
+                    String perm = permissions.getPerm();
+                    if(StringUtils.isNotEmpty(perm)) {
+                        perms.add(perm);
+                    }
+                }
+            }
+            userInfo.setPerms(perms);
+            userCacheUtil.put(user.getUserId(), userInfo);
+            AccessToken accessToken = setAccessToken(user);
+            cacheAccessToken(accessToken);
+            ThreadPoolUtils.execute(() -> {
+                cacheUserIdToken(accessToken.getUserId(), accessToken.getToken());
+                userService.cacheUserInfo(userInfo);
+            });
+            return accessToken;
+        }
+        throw new ServiceException(ErrorCode.BAD_USERNAME_PASSWORD);
     }
 
     /**
@@ -153,6 +151,10 @@ public class SecurityServiceImpl implements ISecurityService {
 
     }
 
+
+
+
+
     @Override
     public AccessToken getAccessToken(String token) {
         AccessToken accessToken = null;
@@ -168,9 +170,10 @@ public class SecurityServiceImpl implements ISecurityService {
      * @param user
      * @return
      */
-    private User initUser(User user) throws Exception {
+    private User initUser(User user) {
         user.setCreateTime(System.currentTimeMillis());
         user.setUserId(idIndexService.getNextUserId());
+        user.setStatus(UserStatus.NORMAL.getStatus());
         user.setOpenId(StringUtils.randomUUID());
         return user;
     }
@@ -232,6 +235,7 @@ public class SecurityServiceImpl implements ISecurityService {
      */
     @Override
     public List<Permission> getUserPermissions(String userId) {
+        System.out.println("userId = " + userId);
         List<Permission> permissions = Lists.newArrayList();
         User user = userDao.getByUserId(userId);
 
@@ -257,7 +261,36 @@ public class SecurityServiceImpl implements ISecurityService {
         return permissionDao.getByIds(permissionObjIds);
     }
 
+    @Override
+    public void addAdmin(AdminRequest param) {
+        Account dbAccount= securityDao.getByAccountNumAndUserType(param.getUsername().trim(),
+                UserType.ADMIN.getType());
 
+        if (dbAccount != null) {
+            throw new ServiceException("该账号已被注册");
+        }
+
+        Account account = new Account();
+        String accountId = StringUtils.randomUUID();
+
+        account.setCreateTime(TimeUtils.currentMillis());
+        account.setUpdateTime(TimeUtils.currentMillis());
+        account.setAccountNum(param.getUsername().trim());
+        account.setAccountId(accountId);
+        account.setAccountType(AccountType.username.name());
+        account.setUserType(UserType.ADMIN.getType());
+        account.setPassword(EncryUtils.md5Hex(param.getPassword(), Constants.PASSWORD_SALT));
+        securityDao.insertAccount(account);
+
+        User user = new User();
+        user.setAccountId(accountId);
+        user.setUserType(UserType.ADMIN.getType());
+        user.setUsername(param.getUsername().trim());
+        user.setRoleIds(param.getRoleIds());
+        user.setNickname(param.getNickname());
+        user = initUser(user);
+        userDao.saveUser(user);
+    }
 
 
 }

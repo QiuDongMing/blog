@@ -62,10 +62,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                     if (Objects.nonNull(userInfo)) {
                         //最关键的部分就是这里, 我们直接注入了Role的权限信息
                         List<SimpleGrantedAuthority> authorities = Lists.newArrayList();
+                        System.out.println("userInfo = " + userInfo.toString());
                         Set<String> perms = userInfo.getPerms();
                         if (!CollectionUtils.isEmpty(perms)) {
                             perms.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
                         }
+                        System.out.println("perms = " + perms.toString());
                         UsernamePasswordAuthenticationToken authenticationToken = new
                                 UsernamePasswordAuthenticationToken(null, null, authorities);
 

@@ -2,6 +2,7 @@ package com.codermi.blog.auth.service;
 
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.data.po.Permission;
+import com.codermi.blog.user.data.request.AdminRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
 
 import java.util.List;
@@ -40,6 +41,14 @@ public interface ISecurityService {
      * @return
      */
     List<Permission> getUserPermissions(String userId);
+
+    /**
+     * 新增管理员
+     * @param param
+     */
+    void addAdmin(AdminRequest param);
+
+
 
 
 
