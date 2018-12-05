@@ -43,7 +43,6 @@ public class WxMsgReplyConfigServiceImpl implements IWxMsgReplyConfigService {
 
 
 
-
     /**
      * 校验请求参数
      * @param request

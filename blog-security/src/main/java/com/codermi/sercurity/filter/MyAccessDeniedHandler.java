@@ -19,7 +19,7 @@ import java.io.IOException;
  * @desc 暂时弃用
  */
 @Deprecated
-@Component
+//@Component
 public class MyAccessDeniedHandler implements AccessDeniedHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MyAccessDeniedHandler.class);

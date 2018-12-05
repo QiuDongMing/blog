@@ -1,14 +1,17 @@
 package com.codermi.blog.controller.wx;
 
+import com.codermi.blog.common.utils.ReqUtil;
+import com.codermi.blog.support.wx.data.request.WxMsgReplyConfigRequest;
+import com.codermi.blog.support.wx.service.IWxMsgReplyConfigService;
 import com.codermi.blog.support.wx.service.IWxPubService;
+import com.codermi.blog.user.data.request.group.AddGroup;
+import com.codermi.common.base.utils.JsonResult;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +34,8 @@ public class WxController extends AbstractWxController {
     @Autowired
     private IWxPubService wxPubService;
 
+    @Autowired
+    private IWxMsgReplyConfigService wxMsgReplyConfigService;
 
     /**
      * URL是开发者用来接收微信消息和事件的接口URL
@@ -73,6 +78,24 @@ public class WxController extends AbstractWxController {
         }
 
     }
+
+
+    @RequestMapping("/reply/add")
+    @PostMapping("wx:reply:add")
+    public JsonResult saveWxReplyConfig(@RequestBody @Validated(value = AddGroup.class)
+                                                    WxMsgReplyConfigRequest request) {
+        wxMsgReplyConfigService.saveWxReplyConfig(request, ReqUtil.instance.getUserId());
+        return JsonResult.SUCCESS();
+    }
+
+
+
+
+
+
+
+
+
 
 
 

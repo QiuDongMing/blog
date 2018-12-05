@@ -1,15 +1,18 @@
 package com.codermi.sercurity.config;
 
-import com.codermi.sercurity.filter.AuthenticationFilter;
-import com.codermi.sercurity.filter.MyAccessDeniedHandler;
-import com.codermi.sercurity.filter.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -22,15 +25,33 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+//    @Autowired
+//    private AuthenticationFilter authenticationFilter;
+
+//
+//    @Autowired
+//    private MyAccessDeniedHandler myAccessDeniedHandler;
+//
+//    @Autowired
+//    private MyAuthenticationEntryPoint myAuthenticationEntryPoint;
+
     @Autowired
-    private AuthenticationFilter authenticationFilter;
+    private MyAuthenticationEntryPoint unauthorizedHandler;
 
 
-    @Autowired
-    private MyAccessDeniedHandler myAccessDeniedHandler;
+    @Bean
+    public MyAuthFilter myAuthFilter() throws Exception {
+        return new MyAuthFilter();
+    }
 
     @Autowired
-    private MyAuthenticationEntryPoint myAuthenticationEntryPoint;
+    private UserDetailsService userDetailsService;
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
+    }
 
     private static final String[] AUTH_WHITE_LIST = {
             // -- swagger ui
@@ -57,44 +78,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-
         httpSecurity
-                .csrf().disable();
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 
-/**
-        httpSecurity.authorizeRequests()
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-                    @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setAccessDecisionManager(urlAccessDecisionManager);
-                        return o;
-                    }
-                }).anyRequest().authenticated().and().addFilterBefore(authenticationFilter,
-                UsernamePasswordAuthenticationFilter.class);
-    **/
+                // 基于token，所以不需要session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
-        httpSecurity
                 .authorizeRequests()
+
                 .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
                 .antMatchers(AUTH_WHITE_LIST).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        httpSecurity.exceptionHandling().authenticationEntryPoint(myAuthenticationEntryPoint)
-//                .accessDeniedHandler(myAccessDeniedHandler);
+                // 除上面外的所有请求全部需要鉴权认证
+                .anyRequest().authenticated().and()
+
+                .addFilterBefore(myAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }

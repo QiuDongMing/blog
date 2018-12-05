@@ -15,7 +15,7 @@
       <pattern>${CONSOLE_LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
+      <level>DEBUG</level>
     </filter>
   </appender>
 
@@ -95,7 +95,7 @@
   </logger>
 
   <!-- 日志输出级别 ${logging.level}-->
-  <root level="INFO">
+  <root level="DEBUG">
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE-INFO"/>
     <appender-ref ref="FILE-ERROR"/>
