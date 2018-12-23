@@ -9,7 +9,8 @@ public class UserEnums {
 
 
     public enum UserRole {
-        ROLE_USER;//普通用户
+        ROLE_USER,//普通用户
+        ROLE_ADMIN;//管理员用户
     }
 
 

@@ -1,6 +1,8 @@
 package com.codermi.sercurity.config;
 
+import com.alibaba.fastjson.JSON;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
+import com.codermi.blog.user.enums.UserEnums.*;
 import com.codermi.blog.user.service.IUserService;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -29,32 +32,32 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         UserInfo userInfo = userService.getUserInfo(userId);
+        System.out.println("JSON.toJSONString(userInfo) = " + JSON.toJSONString(userInfo));
         if (userInfo == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", userId));
         } else {
-            return new AuthUser(userId, this.buildUserGrant(userInfo));
+            List<GrantedAuthority> grantedAuthorities = this.buildUserGrant(userInfo);
+            System.out.println("JSON.toJSONString(grantedAuthorities) = " + JSON.toJSONString(grantedAuthorities));
+            return new AuthUser(userId, Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()),  grantedAuthorities);
         }
     }
 
     public List<GrantedAuthority> buildUserGrant(UserInfo userInfo) {
         List<GrantedAuthority> userGrants = Lists.newArrayList();
         if (userInfo == null) return userGrants;
-
         Set<String> perms = userInfo.getPerms();
         if (CollectionUtils.isNotEmpty(perms)) {
             for (String perm : perms) {
                 userGrants.add(new SimpleGrantedAuthority(perm));
             }
         }
-        List<String> roleIds = userInfo.getRoleIds();
-        if (CollectionUtils.isNotEmpty(roleIds)) {
-            for (String role : roleIds) {
-                userGrants.add(new SimpleGrantedAuthority(role));
-            }
+        if (Objects.equals(userInfo.getUserType(), UserType.ADMIN.getType())) {
+            userGrants.add(new SimpleGrantedAuthority(UserRole.ROLE_ADMIN.name()));
         }
-
+        if (Objects.equals(userInfo.getUserType(), UserType.USER.getType())) {
+            userGrants.add(new SimpleGrantedAuthority(UserRole.ROLE_USER.name()));
+        }
         return userGrants;
     }
-
 
 }

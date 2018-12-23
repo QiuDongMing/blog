@@ -14,16 +14,20 @@ public class AuthUser implements UserDetails {
 
     private final String userId;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final boolean enable;
 
-    public AuthUser(String userId,  Collection<? extends GrantedAuthority> authorities) {
+
+
+    public AuthUser(String userId, boolean enable,  Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.authorities = authorities;
+        this.enable = enable;
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class AuthUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enable;
     }
 
 
