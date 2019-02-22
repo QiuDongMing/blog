@@ -41,6 +41,7 @@
             <!--<artifactId>spring-boot-starter-amqp</artifactId>-->
         <!--</dependency>-->
 
+        <!--
         <dependency>
             <groupId>com.codermi</groupId>
             <artifactId>elastic-job</artifactId>
@@ -53,6 +54,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
 
         <!--添加Swagger依赖 -->
         <dependency>
