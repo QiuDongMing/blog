@@ -74,8 +74,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/v2/api-docs",
             "/**/*.html",
+            "/**/*.css",
+            "/**/*.js",
             //--公开的无需登录的
             "/**/open/**"
+
+
     };
 
 
