@@ -129,7 +129,8 @@ public class WebSecurityWithSession extends WebSecurityConfigurerAdapter {
             //--公开的无需登录的
             "/**/open/**",
             "/static/**",
-            "/user/login_p"
+            "/user/login_p",
+            "/user/register"
     };
 
 
