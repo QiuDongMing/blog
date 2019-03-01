@@ -97,7 +97,7 @@ public class UserController {
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('user:add')")
     public JsonResult addAdmin(@RequestBody @Validated AdminRequest param) {
-        System.out.println(" 有权限 " );
+        System.out.println(" 有权限  " );
         securityService.addAdmin(param);
         return JsonResult.SUCCESS();
     }
