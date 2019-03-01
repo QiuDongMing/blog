@@ -13,7 +13,7 @@ public interface IRoleService {
      * 新增角色
      * @param request
      */
-    void addRole(RoleRequest request);
+    void addRole(RoleRequest request, String userId);
 
 
 

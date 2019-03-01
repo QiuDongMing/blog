@@ -21,6 +21,7 @@ import java.io.IOException;
  * @date 2018/12/5 18:15
  * @desc
  */
+@Deprecated
 public class MyAuthFilter extends OncePerRequestFilter {
 
     @Autowired

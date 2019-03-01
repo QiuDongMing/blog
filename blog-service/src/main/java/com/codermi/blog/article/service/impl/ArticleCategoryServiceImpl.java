@@ -4,7 +4,6 @@ import com.codermi.blog.article.dao.IArticleCategoryDao;
 import com.codermi.blog.article.data.po.ArticleCategory;
 import com.codermi.blog.article.service.IArticleCategoryService;
 import com.codermi.blog.article.service.IArticleService;
-import com.codermi.blog.common.utils.ReqUtil;
 import com.codermi.blog.exception.ServiceException;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,7 @@ public class ArticleCategoryServiceImpl implements IArticleCategoryService {
 
 
     @Override
-    public String saveArticleCategory(String name) {
-        String userId = ReqUtil.instance.getUserId();
+    public String saveArticleCategory(String name, String userId) {
         System.out.println("userId = " + userId);
         ArticleCategory articleCategory = articleCategoryDao.getByUserIdName(userId, name.trim());
         if (Objects.nonNull(articleCategory)) {

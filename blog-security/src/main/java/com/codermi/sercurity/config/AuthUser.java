@@ -16,11 +16,18 @@ public class AuthUser implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean enable;
     private final String password;
+    private final Integer userType;
 
 
+    public AuthUser(String userId,
+                    boolean enable,
+                    String password,
+                    Integer userType,
+                    Collection<? extends GrantedAuthority>authorities
+    ) {
 
-    public AuthUser(String userId, boolean enable, String password,  Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
+        this.userType = userType;
         this.authorities = authorities;
         this.enable = enable;
         this.password = password;

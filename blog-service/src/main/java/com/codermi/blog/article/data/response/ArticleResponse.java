@@ -1,6 +1,5 @@
 package com.codermi.blog.article.data.response;
 
-import com.codermi.blog.label.data.po.Label;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

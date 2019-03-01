@@ -1,4 +1,4 @@
-package com.codermi.sercurity.config.session;
+package com.codermi.sercurity.config;
 
 import com.alibaba.fastjson.JSON;
 import com.codermi.common.base.utils.JsonResult;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 
 /**
  * @author qiudm
@@ -24,15 +23,14 @@ import java.util.Collection;
 @Component
 public class MyAuthSuccessHandler implements AuthenticationSuccessHandler {
 
+
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        System.out.println("JSON.toJSONString(authorities) = " + JSON.toJSONString(authorities));
-
-
-        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("JSON.toJSONString(principal) = " + JSON.toJSONString(principal));
+//        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder
+//                .getContext().getAuthentication().getAuthorities();
+//        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();

@@ -1,15 +1,16 @@
 package com.codermi.blog.controller.wx;
 
-import com.codermi.blog.common.utils.ReqUtil;
 import com.codermi.blog.support.wx.data.request.WxMsgReplyConfigRequest;
 import com.codermi.blog.support.wx.service.IWxMsgReplyConfigService;
 import com.codermi.blog.support.wx.service.IWxPubService;
 import com.codermi.blog.user.data.request.group.AddGroup;
 import com.codermi.common.base.utils.JsonResult;
+import com.codermi.sercurity.utils.ReqUtil;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,15 +81,13 @@ public class WxController extends AbstractWxController {
     }
 
 
-    @RequestMapping("/reply/add")
-    @PostMapping("wx:reply:add")
+    @PostMapping("/reply/add")
+    @PreAuthorize("hasAuthority('wx:reply:add')")
     public JsonResult saveWxReplyConfig(@RequestBody @Validated(value = AddGroup.class)
                                                     WxMsgReplyConfigRequest request) {
         wxMsgReplyConfigService.saveWxReplyConfig(request, ReqUtil.instance.getUserId());
         return JsonResult.SUCCESS();
     }
-
-
 
 
 

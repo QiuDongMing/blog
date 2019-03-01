@@ -2,6 +2,7 @@ package com.codermi.blog.user.service;
 
 import com.codermi.blog.user.data.po.Permission;
 import com.codermi.blog.user.data.request.PermissionRequest;
+import com.codermi.blog.user.data.response.PermissionResponse;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface IPermissionService {
      * 获取权限列表
      * @return
      */
-    Permission getPermsList();
+    PermissionResponse getPermsList();
 
 
 

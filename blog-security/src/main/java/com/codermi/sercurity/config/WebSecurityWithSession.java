@@ -1,8 +1,8 @@
-package com.codermi.sercurity.config.session;
+package com.codermi.sercurity.config;
 
 import com.codermi.blog.common.constants.Constants;
 import com.codermi.common.base.utils.EncryUtils;
-import com.codermi.sercurity.config.MyUserDetailService;
+import com.codermi.sercurity.filter.ExUsernamePasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

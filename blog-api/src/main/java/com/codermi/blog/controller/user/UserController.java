@@ -43,7 +43,7 @@ public class UserController {
 
 //    @PreAuthorize("isAuthenticated()")
 //    @Secured({"ROLE_USER"})
-    @RequestMapping("test")
+    @GetMapping("test")
     public JsonResult test() {
         ApplicationContext applicationContext = applicationContextAwareImplements.getApplicationContext();
 
@@ -54,7 +54,7 @@ public class UserController {
         return JsonResult.SUCCESS("测试");
     }
 
-    @RequestMapping("/open/test")
+    @GetMapping("/open/test")
     public JsonResult open() {
 
 //        int a = 1 /0 ;

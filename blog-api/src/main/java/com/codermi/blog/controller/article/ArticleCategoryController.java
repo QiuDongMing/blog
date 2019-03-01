@@ -2,6 +2,7 @@ package com.codermi.blog.controller.article;
 
 import com.codermi.blog.article.service.IArticleCategoryService;
 import com.codermi.common.base.utils.JsonResult;
+import com.codermi.sercurity.utils.ReqUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,11 +29,10 @@ public class ArticleCategoryController {
 
     @ApiOperation(value = "新增文章分类", httpMethod = "POST" )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "access-token", value = "token", required = true, dataType = "String", paramType = "header"),
             @ApiImplicitParam(name = "name", value = "分类名称", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/save")
     public JsonResult save(@NotBlank(message = "文章分类名称不能为空") @RequestParam String name) {
-        return JsonResult.SUCCESS(articleCategoryService.saveArticleCategory(name));
+        return JsonResult.SUCCESS(articleCategoryService.saveArticleCategory(name, ReqUtil.instance.getUserId()));
     }
 }

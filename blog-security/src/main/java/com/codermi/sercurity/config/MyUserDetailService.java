@@ -29,15 +29,11 @@ import java.util.Set;
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
-    private IUserService userService;
-
-    @Autowired
     private ISecurityService securityService;
 
 
     @Override
     public UserDetails loadUserByUsername(String usernameAndType) throws UsernameNotFoundException {
-        System.out.println("usernameAndType = " + usernameAndType);
         String[] userNameAndTypeArr = usernameAndType.split(":");
         String userName = null;
         Integer userType = UserType.USER.getType();
@@ -45,18 +41,18 @@ public class MyUserDetailService implements UserDetailsService {
             userName = userNameAndTypeArr[0];
             userType = Integer.valueOf(userNameAndTypeArr[1]);
         }
-
-//        UserInfo userInfo = userService.getUserInfo(userId);
         LoginUserInfo userInfo = securityService.getLoginUserInfoByUserNameAndType(userName, userType);
-        System.out.println("JSON.toJSONString(userInfo) = " + JSON.toJSONString(userInfo));
         if (userInfo == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", userName));
         } else {
             List<GrantedAuthority> grantedAuthorities = this.buildUserGrant(userInfo);
-            System.out.println("JSON.toJSONString(grantedAuthorities) = " + JSON.toJSONString(grantedAuthorities));
-            System.out.println("Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()) = " + Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()));
-            return new AuthUser(userInfo.getUserId(), Objects.equals(userInfo.getStatus(),
-                    UserStatus.NORMAL.getStatus()), userInfo.getPassword(), grantedAuthorities);
+            return new AuthUser(
+                    userInfo.getUserId(),
+                    Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()),
+                    userInfo.getPassword(),
+                    userInfo.getUserType(),
+                    grantedAuthorities
+            );
         }
     }
 

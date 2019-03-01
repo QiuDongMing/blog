@@ -15,7 +15,7 @@ public interface IArticleCategoryService {
      * @param name
      * @return
      */
-    String saveArticleCategory(String name);
+    String saveArticleCategory(String name, String userId);
 
     /**
      * 更新文章分类的名称

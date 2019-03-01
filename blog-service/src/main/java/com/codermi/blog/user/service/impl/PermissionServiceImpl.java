@@ -5,6 +5,7 @@ import com.codermi.blog.user.constants.PermConstants;
 import com.codermi.blog.user.dao.IPermissionDao;
 import com.codermi.blog.user.data.po.Permission;
 import com.codermi.blog.user.data.request.PermissionRequest;
+import com.codermi.blog.user.data.response.PermissionResponse;
 import com.codermi.blog.user.enums.PermissionEnums.*;
 import com.codermi.blog.user.service.IPermissionService;
 import com.codermi.common.base.utils.BeanUtil;
@@ -71,15 +72,17 @@ public class PermissionServiceImpl implements IPermissionService {
 
 
     @Override
-    public Permission getPermsList() {
+    public PermissionResponse getPermsList() {
         String firstMenuId = PermConstants.FIRST_MENU_ID;
-        Permission res = new Permission();
+//        Permission res = new Permission();
+        PermissionResponse res = new PermissionResponse();
         res.setId(firstMenuId);
         res.setName(PermConstants.FIRST_MENU_NAME);
         res.setIcon(PermConstants.FIRST_MENU_ICON);
         List<Permission> childs = permissionDao.getByPid(firstMenuId);
         getByPid(childs);
-        res.setChild(childs);
+        List<PermissionResponse> childListVos = BeanUtil.copyList(childs, PermissionResponse.class);
+        res.setChild(childListVos);
         return res;
     }
 

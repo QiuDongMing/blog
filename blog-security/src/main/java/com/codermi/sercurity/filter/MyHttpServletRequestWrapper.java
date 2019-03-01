@@ -9,6 +9,7 @@ import java.util.*;
  * @date 2018/10/11 18:48
  * @desc
  */
+@Deprecated
 public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
 

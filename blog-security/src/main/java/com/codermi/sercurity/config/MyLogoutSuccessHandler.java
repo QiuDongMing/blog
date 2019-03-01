@@ -1,4 +1,4 @@
-package com.codermi.sercurity.config.session;
+package com.codermi.sercurity.config;
 
 import com.codermi.common.base.utils.JsonResult;
 import org.springframework.security.core.Authentication;

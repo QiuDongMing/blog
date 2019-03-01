@@ -1,6 +1,5 @@
 package com.codermi.blog.user.service.impl;
 
-import com.codermi.blog.common.utils.ReqUtil;
 import com.codermi.blog.exception.ServiceException;
 import com.codermi.blog.user.dao.IRoleDao;
 import com.codermi.blog.user.data.po.Role;
@@ -25,14 +24,14 @@ public class RoleServiceImpl implements IRoleService {
 
 
     @Override
-    public void addRole(RoleRequest roleRequest) {
+    public void addRole(RoleRequest roleRequest, String userId) {
         Role dbRole = roleDao.getByName(roleRequest.getRoleName().trim());
         if (Objects.nonNull(dbRole)) {
             throw new ServiceException("该角色已经存在");
         }
 
         Role role = BeanUtil.copy(roleRequest, Role.class);
-        role.setCreator(ReqUtil.instance.getUserId());
+        role.setCreator(userId);
         long time = System.currentTimeMillis();
         role.setCreateTime(time);
         role.setUpdateTime(time);
