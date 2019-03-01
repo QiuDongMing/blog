@@ -16,11 +16,13 @@ import java.util.List;
 public interface ISecurityService {
 
     /**
+     * 使用spring-security登录
      * 根据账号密码登陆
      * @param username
      * @param password
      * @return
      */
+    @Deprecated
     AccessToken loginByUserNamePassword(String username, String password, Integer userType);
 
     /**
@@ -49,7 +51,12 @@ public interface ISecurityService {
      */
     void addAdmin(AdminRequest param);
 
-
+    /**
+     * 根据用户名称和用户类型获取用户
+     * @param username
+     * @param type
+     * @return
+     */
     LoginUserInfo getLoginUserInfoByUserNameAndType(String username, Integer type);
 
 

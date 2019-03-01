@@ -3,6 +3,7 @@ package com.codermi.common.base.utils;
 import com.codermi.common.base.constants.QiniuConstant;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
+import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
@@ -38,7 +39,7 @@ public class QiniuUtil {
 
 
     public static String upload(byte[] bytes, String fileName) throws QiniuException {
-        uploadManager.put(bytes, fileName, getUploadToken());
+        Response response = uploadManager.put(bytes, fileName, getUploadToken());
         return fileName;
     }
 

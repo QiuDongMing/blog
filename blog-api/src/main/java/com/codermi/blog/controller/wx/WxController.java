@@ -64,7 +64,6 @@ public class WxController extends AbstractWxController {
             LOGGER.error(e.getMessage(), e);
         }
         response.setCharacterEncoding("UTF-8");
-
         PrintWriter out = null;
         try {
             String responseMsg = wxPubService.handlerMsgEvent(request);
