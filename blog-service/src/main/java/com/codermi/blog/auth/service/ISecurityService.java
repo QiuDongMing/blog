@@ -1,5 +1,6 @@
 package com.codermi.blog.auth.service;
 
+import com.codermi.blog.auth.data.vo.LoginUserInfo;
 import com.codermi.blog.user.cache.data.dto.AccessToken;
 import com.codermi.blog.user.data.po.Permission;
 import com.codermi.blog.user.data.request.AdminRequest;
@@ -49,6 +50,7 @@ public interface ISecurityService {
     void addAdmin(AdminRequest param);
 
 
+    LoginUserInfo getLoginUserInfoByUserNameAndType(String username, Integer type);
 
 
 }

@@ -15,13 +15,15 @@ public class AuthUser implements UserDetails {
     private final String userId;
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean enable;
+    private final String password;
 
 
 
-    public AuthUser(String userId, boolean enable,  Collection<? extends GrantedAuthority> authorities) {
+    public AuthUser(String userId, boolean enable, String password,  Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.authorities = authorities;
         this.enable = enable;
+        this.password = password;
     }
 
 
@@ -32,7 +34,7 @@ public class AuthUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
@@ -42,17 +44,17 @@ public class AuthUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

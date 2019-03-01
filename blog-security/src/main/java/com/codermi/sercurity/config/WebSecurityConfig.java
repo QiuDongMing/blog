@@ -20,9 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @date 2018/7/25 9:56
  * @desc
  */
-@Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+//@Configuration
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -44,27 +44,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
-
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-
-                // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-                .authorizeRequests()
-
-                .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
-                .antMatchers(AUTH_WHITE_LIST).permitAll()
-                // 除上面外的所有请求全部需要鉴权认证
-                .anyRequest().authenticated().and()
-
-                .addFilterBefore(myAuthFilter(), UsernamePasswordAuthenticationFilter.class);
-
-    }
+//
+//    @Override
+//    protected void configure(HttpSecurity httpSecurity) throws Exception {
+//
+//        httpSecurity
+//                .csrf().disable()
+//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+//
+//                // 基于token，所以不需要session
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//
+//                .authorizeRequests()
+//
+//                .antMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
+//                .antMatchers(AUTH_WHITE_LIST).permitAll()
+//                // 除上面外的所有请求全部需要鉴权认证
+//                .anyRequest().authenticated().and()
+//
+//                .addFilterBefore(myAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+//
+//    }
 
 
 
@@ -80,8 +80,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/**/*.js",
             //--公开的无需登录的
             "/**/open/**"
-
-
     };
 
 

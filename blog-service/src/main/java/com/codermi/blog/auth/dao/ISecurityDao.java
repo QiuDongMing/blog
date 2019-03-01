@@ -12,6 +12,8 @@ public interface ISecurityDao {
 
     Account getByAccountNumAndUserType(String accountNum, Integer userType);
 
+    Account getByAccountNum(String accountNum);
+
 
     void insertAccount(Account account);
 

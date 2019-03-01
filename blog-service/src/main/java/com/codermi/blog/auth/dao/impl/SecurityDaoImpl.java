@@ -26,6 +26,11 @@ public class SecurityDaoImpl implements ISecurityDao {
     }
 
     @Override
+    public Account getByAccountNum(String accountNum) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("accountNum").is(accountNum)), Account.class);
+    }
+
+    @Override
     public void insertAccount(Account account) {
         mongoTemplate.insert(account);
     }

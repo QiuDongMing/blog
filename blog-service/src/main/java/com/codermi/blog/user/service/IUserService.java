@@ -11,6 +11,9 @@ import java.util.List;
  */
 public interface IUserService {
 
+
+
+
     /**
      * 获取基础用户信息
      * @param userId

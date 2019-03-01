@@ -62,6 +62,11 @@ public class JsonResult extends JSONObject {
         return new JsonResult(resultCode, resultMsg, detailMsg);
     }
 
+
+    public static JsonResult RESULT(ErrorCode errorCode) {
+        return new JsonResult(errorCode.getErrorCode(), errorCode.getErrMsg(), null);
+    }
+
     public static JsonResult RESULT(int resultCode, String resultMsg, String detailMsg, Object data) {
         return new JsonResult(resultCode, resultMsg, detailMsg, data);
     }

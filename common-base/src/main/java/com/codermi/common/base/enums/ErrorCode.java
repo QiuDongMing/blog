@@ -18,12 +18,11 @@ public enum ErrorCode {
     USER_NOT_EXIT(100201, "用户不存在"),
     USER_DISABLED(100202, "用户被禁用"),
     ACCOUNT_NOT_EXIT(100203, "账户不存在"),
-    BAD_USERNAME_PASSWORD(100204, "用户名或密码错误"),
+    BAD_USERNAME_PASSWORD(100204, "用户名或密码错误le"),
 
 
     INVALID_TOKEN(100301, "token失效"),
     NEED_LOGIN(100302, "未登录");
-
 
     private Integer errorCode;
     private String  errMsg;

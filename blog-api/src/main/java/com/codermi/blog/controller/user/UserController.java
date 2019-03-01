@@ -8,6 +8,7 @@ import com.codermi.blog.user.data.request.LoginRequest;
 import com.codermi.blog.user.data.request.RegisterRequest;
 import com.codermi.blog.user.service.IUserService;
 import com.codermi.blog.user.service.impl.UserServiceImpl;
+import com.codermi.common.base.enums.ErrorCode;
 import com.codermi.common.base.utils.JsonResult;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
@@ -75,14 +76,21 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "用户登录", httpMethod = "POST", response = AccessToken.class)
-    @PostMapping("/login")
-    public JsonResult login(@RequestBody @Validated LoginRequest param) {
-        AccessToken accessToken = securityService.loginByUserNamePassword(param.getUsername(), param.getPassword(), param.getUserType());
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("accessToken", accessToken);
-        return JsonResult.SUCCESS(map);
+    @GetMapping("/login_p")
+    public JsonResult login_p() {
+       // LOGGER.info("login_p");
+        return JsonResult.RESULT(ErrorCode.NEED_LOGIN);
     }
+
+
+//    @ApiOperation(value = "用户登录", httpMethod = "POST", response = AccessToken.class, hidden = true)
+//    @PostMapping("/login")
+//    public JsonResult login(@RequestBody @Validated LoginRequest param) {
+//        AccessToken accessToken = securityService.loginByUserNamePassword(param.getUsername(), param.getPassword(), param.getUserType());
+//        Map<String, Object> map = Maps.newHashMap();
+//        map.put("accessToken", accessToken);
+//        return JsonResult.SUCCESS(map);
+//    }
 
 
     @ApiOperation(value = "新增管理员用户", httpMethod = "POST")

@@ -3,6 +3,7 @@ package com.codermi.blog.auth.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.codermi.blog.auth.dao.ISecurityDao;
 import com.codermi.blog.auth.data.po.Account;
+import com.codermi.blog.auth.data.vo.LoginUserInfo;
 import com.codermi.blog.auth.enums.AccountEnum.*;
 import com.codermi.blog.auth.service.ISecurityService;
 import com.codermi.blog.common.constants.Constants;
@@ -79,17 +80,7 @@ public class SecurityServiceImpl implements ISecurityService {
         if (Objects
                 .equals(EncryUtils.md5Hex(password, Constants.PASSWORD_SALT), account.getPassword())) {
             UserInfo userInfo = createUserInfo(user);
-            List<Permission> userPermissions = getUserPermissions(user.getUserId());
-            Set<String> perms = Sets.newHashSet();
-            if (CollectionUtils.isNotEmpty(userPermissions)) {
-                for (Permission permissions : userPermissions) {
-                    String perm = permissions.getPerm();
-                    if(StringUtils.isNotEmpty(perm)) {
-                        perms.add(perm);
-                    }
-                }
-            }
-            userInfo.setPerms(perms);
+            userInfo.setPerms(structUserPerms(userInfo.getUserId()));
             userCacheUtil.put(user.getUserId(), userInfo);
             AccessToken accessToken = setAccessToken(user);
             cacheAccessToken(accessToken);
@@ -101,6 +92,26 @@ public class SecurityServiceImpl implements ISecurityService {
         }
         throw new ServiceException(ErrorCode.BAD_USERNAME_PASSWORD);
     }
+
+
+    private Set<String> structUserPerms(String userId) {
+        Set<String> perms = Sets.newHashSet();
+        if (StringUtils.isEmpty(userId)) {
+            return perms;
+        }
+        List<Permission> userPermissions = getUserPermissions(userId);
+        if (CollectionUtils.isNotEmpty(userPermissions)) {
+            for (Permission permissions : userPermissions) {
+                String perm = permissions.getPerm();
+                if(StringUtils.isNotEmpty(perm)) {
+                    perms.add(perm);
+                }
+            }
+        }
+        return perms;
+    }
+
+
 
     /**
      * 验证用户
@@ -293,4 +304,18 @@ public class SecurityServiceImpl implements ISecurityService {
     }
 
 
+    @Override
+    public LoginUserInfo getLoginUserInfoByUserNameAndType(String username, Integer userType) {
+        User user = userDao.getByUserNameAndType(username, userType);
+                LoginUserInfo loginUserInfo = null;
+        if(user != null) {
+            Account account = securityDao.getByAccountNum(username);
+            if (account != null) {
+                loginUserInfo = BeanUtil.copy(user, LoginUserInfo.class);
+                loginUserInfo.setPassword(account.getPassword());
+                loginUserInfo.setPerms(structUserPerms(user.getUserId()));
+            }
+        }
+        return loginUserInfo;
+    }
 }

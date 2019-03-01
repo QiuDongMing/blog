@@ -1,6 +1,8 @@
 package com.codermi.sercurity.config;
 
 import com.alibaba.fastjson.JSON;
+import com.codermi.blog.auth.data.vo.LoginUserInfo;
+import com.codermi.blog.auth.service.ISecurityService;
 import com.codermi.blog.user.cache.data.dto.UserInfo;
 import com.codermi.blog.user.enums.UserEnums.*;
 import com.codermi.blog.user.service.IUserService;
@@ -29,16 +31,32 @@ public class MyUserDetailService implements UserDetailsService {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private ISecurityService securityService;
+
+
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        UserInfo userInfo = userService.getUserInfo(userId);
+    public UserDetails loadUserByUsername(String usernameAndType) throws UsernameNotFoundException {
+        System.out.println("usernameAndType = " + usernameAndType);
+        String[] userNameAndTypeArr = usernameAndType.split(":");
+        String userName = null;
+        Integer userType = UserType.USER.getType();
+        if (userNameAndTypeArr.length == 2) {
+            userName = userNameAndTypeArr[0];
+            userType = Integer.valueOf(userNameAndTypeArr[1]);
+        }
+
+//        UserInfo userInfo = userService.getUserInfo(userId);
+        LoginUserInfo userInfo = securityService.getLoginUserInfoByUserNameAndType(userName, userType);
         System.out.println("JSON.toJSONString(userInfo) = " + JSON.toJSONString(userInfo));
         if (userInfo == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", userId));
+            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", userName));
         } else {
             List<GrantedAuthority> grantedAuthorities = this.buildUserGrant(userInfo);
             System.out.println("JSON.toJSONString(grantedAuthorities) = " + JSON.toJSONString(grantedAuthorities));
-            return new AuthUser(userId, Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()),  grantedAuthorities);
+            System.out.println("Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()) = " + Objects.equals(userInfo.getStatus(), UserStatus.NORMAL.getStatus()));
+            return new AuthUser(userInfo.getUserId(), Objects.equals(userInfo.getStatus(),
+                    UserStatus.NORMAL.getStatus()), userInfo.getPassword(), grantedAuthorities);
         }
     }
 
@@ -59,5 +77,7 @@ public class MyUserDetailService implements UserDetailsService {
         }
         return userGrants;
     }
+
+
 
 }
